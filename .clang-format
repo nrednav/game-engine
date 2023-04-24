@@ -1,0 +1,6 @@
+BasedOnStyle: LLVM
+
+UseTab: Never
+PointerAlignment: Left
+ReferenceAlignment: Left
+SortIncludes: false
