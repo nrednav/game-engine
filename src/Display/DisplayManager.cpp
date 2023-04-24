@@ -37,7 +37,7 @@ bool DisplayManager::createDisplay() {
 
   glViewport(0, 0, DISPLAY_WIDTH, DISPLAY_HEIGHT);
   glfwSwapInterval(1);
-  glfwSetInputMode(this->display, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+  glfwSetInputMode(this->display, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
   this->lastFrameTime = glfwGetTime();
 
   // Load GLEW
