@@ -9,70 +9,72 @@
 #include <vector>
 #include <iostream>
 
-int main()
-{
-	if (!DisplayManager::getInstance()->createDisplay()) {
-		std::cout << "Failed to create window..." << std::endl;
-		return -1;
-	}
+int main() {
+  if (!DisplayManager::getInstance()->createDisplay()) {
+    std::cout << "Failed to create window..." << std::endl;
+    return -1;
+  }
 
-	GLFWwindow* display = DisplayManager::getInstance()->getDisplay();
-	Loader* loader = new Loader();
-	MasterRenderer* renderer = new MasterRenderer(loader);
-	
-	TerrainTexture* bgTexture = new TerrainTexture(loader->loadTexture("grassTerrain2", true));
-	TerrainTexture* rTexture = new TerrainTexture(loader->loadTexture("mudTerrain", true));
-	TerrainTexture* gTexture = new TerrainTexture(loader->loadTexture("grassFlowersTerrain", true));
-	TerrainTexture* bTexture = new TerrainTexture(loader->loadTexture("pathTerrain", true));
-	TerrainTexture* blendMap = new TerrainTexture(loader->loadTexture("blendMap", true));
+  GLFWwindow* display = DisplayManager::getInstance()->getDisplay();
+  Loader* loader = new Loader();
+  MasterRenderer* renderer = new MasterRenderer(loader);
 
-	TerrainTexturePack* texturePack = new TerrainTexturePack(
-		bgTexture, rTexture, gTexture, bTexture
-	);
+  TerrainTexture* bgTexture =
+      new TerrainTexture(loader->loadTexture("grassTerrain2", true));
+  TerrainTexture* rTexture =
+      new TerrainTexture(loader->loadTexture("mudTerrain", true));
+  TerrainTexture* gTexture =
+      new TerrainTexture(loader->loadTexture("grassFlowersTerrain", true));
+  TerrainTexture* bTexture =
+      new TerrainTexture(loader->loadTexture("pathTerrain", true));
+  TerrainTexture* blendMap =
+      new TerrainTexture(loader->loadTexture("blendMap", true));
 
-	std::vector<std::vector<Terrain*>> terrains(2, std::vector<Terrain*>(2));
-	terrains[0][0] = new Terrain(0, 0, loader, texturePack, blendMap, "heightmap");
-	terrains[0][1] = new Terrain(0, 1, loader, texturePack, blendMap, "heightmap");
-	terrains[1][0] = new Terrain(1, 0, loader, texturePack, blendMap, "heightmap");
-	terrains[1][1] = new Terrain(1, 1, loader, texturePack, blendMap, "heightmap");
+  TerrainTexturePack* texturePack =
+      new TerrainTexturePack(bgTexture, rTexture, gTexture, bTexture);
 
-	EntityManager* entityManager = EntityManager::getInstance();
-	entityManager->initialize(loader, terrains[0][0]);
-	entityManager->generateEntities(ENTITY_COUNT);
+  std::vector<std::vector<Terrain*>> terrains(2, std::vector<Terrain*>(2));
+  terrains[0][0] =
+      new Terrain(0, 0, loader, texturePack, blendMap, "heightmap");
+  terrains[0][1] =
+      new Terrain(0, 1, loader, texturePack, blendMap, "heightmap");
+  terrains[1][0] =
+      new Terrain(1, 0, loader, texturePack, blendMap, "heightmap");
+  terrains[1][1] =
+      new Terrain(1, 1, loader, texturePack, blendMap, "heightmap");
 
-	Player* player = entityManager->createPlayer("player", 1.0f);
-	Camera* camera = new Camera(player, glm::vec3(0, 5, 0));
+  EntityManager* entityManager = EntityManager::getInstance();
+  entityManager->initialize(loader, terrains[0][0]);
+  entityManager->generateEntities(ENTITY_COUNT);
 
-	int previousGridX = 0, previousGridZ = 0;
+  Player* player = entityManager->createPlayer("player", 1.0f);
+  Camera* camera = new Camera(player, glm::vec3(0, 5, 0));
 
-	while (!glfwWindowShouldClose(display)) {
-		int gridX = (int)(player->getPosition().x / TERRAIN_SIZE + 1);
-		int gridZ = (int)(player->getPosition().z / TERRAIN_SIZE + 1);
+  int previousGridX = 0, previousGridZ = 0;
 
-		if (gridX != previousGridX || gridZ != previousGridZ) {
-			previousGridX = gridX;
-			previousGridZ = gridZ;
-			entityManager->recalculateEntityPositions(terrains[gridX][gridZ]);
-		}
+  while (!glfwWindowShouldClose(display)) {
+    int gridX = (int)(player->getPosition().x / TERRAIN_SIZE + 1);
+    int gridZ = (int)(player->getPosition().z / TERRAIN_SIZE + 1);
 
-		player->move(terrains[gridX][gridZ]);
-		camera->move();
+    if (gridX != previousGridX || gridZ != previousGridZ) {
+      previousGridX = gridX;
+      previousGridZ = gridZ;
+      entityManager->recalculateEntityPositions(terrains[gridX][gridZ]);
+    }
 
-		renderer->renderScene(
-			entityManager->getEntities(),
-			terrains,
-			entityManager->getLights(),
-			player,
-			camera
-		);
+    player->move(terrains[gridX][gridZ]);
+    camera->move();
 
-		DisplayManager::getInstance()->updateDisplay();
-	}
+    renderer->renderScene(entityManager->getEntities(), terrains,
+                          entityManager->getLights(), player, camera);
 
-	entityManager->cleanup();
-	renderer->cleanup();
-	loader->cleanup();
-	DisplayManager::getInstance()->closeDisplay();
+    DisplayManager::getInstance()->updateDisplay();
+  }
 
-	return 0;
+  entityManager->cleanup();
+  renderer->cleanup();
+  loader->cleanup();
+  DisplayManager::getInstance()->closeDisplay();
+
+  return 0;
 }
