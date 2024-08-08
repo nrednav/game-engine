@@ -111,7 +111,7 @@ TexturedModel* EntityManager::create_textured_model(
     bool uses_fake_lighting, bool uses_texture_atlas, int atlas_row_count) {
 
   RawModel* entity_raw_model = ObjLoader::load_model(name, loader);
-  ModelTexture* entity_texture = new ModelTexture(loader->loadTexture(name));
+  ModelTexture* entity_texture = new ModelTexture(loader->load_texture(name));
 
   if (uses_texture_atlas) {
     entity_texture->setNumberOfRows(atlas_row_count);

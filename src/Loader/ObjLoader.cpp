@@ -71,7 +71,7 @@ RawModel* ObjLoader::load_model(std::string fileName, Loader* loader) {
 
   fclose(file);
 
-  return loader->loadToVAO(vertices, indices, texturesArray, normalsArray);
+  return loader->load_to_vao(vertices, indices, texturesArray, normalsArray);
 }
 
 void ObjLoader::process_vertices(char* vertexData, std::vector<int>& indices,

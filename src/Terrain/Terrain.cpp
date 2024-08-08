@@ -75,7 +75,7 @@ RawModel* Terrain::generateTerrain(Loader* loader,
     }
   }
 
-  return loader->loadToVAO(vertices, indices, textureCoords, normals);
+  return loader->load_to_vao(vertices, indices, textureCoords, normals);
 }
 
 float Terrain::getHeight(const int& x, const int& z, stbi_uc* imageData,

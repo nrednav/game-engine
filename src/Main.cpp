@@ -17,15 +17,15 @@ int main() {
   MasterRenderer* renderer = new MasterRenderer(loader);
 
   TerrainTexture* bgTexture =
-      new TerrainTexture(loader->loadTexture("grassTerrain2", true));
+      new TerrainTexture(loader->load_texture("grassTerrain2", true));
   TerrainTexture* rTexture =
-      new TerrainTexture(loader->loadTexture("mudTerrain", true));
+      new TerrainTexture(loader->load_texture("mudTerrain", true));
   TerrainTexture* gTexture =
-      new TerrainTexture(loader->loadTexture("grassFlowersTerrain", true));
+      new TerrainTexture(loader->load_texture("grassFlowersTerrain", true));
   TerrainTexture* bTexture =
-      new TerrainTexture(loader->loadTexture("pathTerrain", true));
+      new TerrainTexture(loader->load_texture("pathTerrain", true));
   TerrainTexture* blendMap =
-      new TerrainTexture(loader->loadTexture("blendMap", true));
+      new TerrainTexture(loader->load_texture("blendMap", true));
 
   TerrainTexturePack* texturePack =
       new TerrainTexturePack(bgTexture, rTexture, gTexture, bTexture);

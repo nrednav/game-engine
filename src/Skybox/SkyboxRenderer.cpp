@@ -6,9 +6,9 @@
 
 SkyboxRenderer::SkyboxRenderer(SkyboxShader* shader, Loader* loader,
                                glm::mat4 projectionMatrix) {
-  this->cube = loader->loadToVAO(this->vertices, 3);
-  this->dayTextureID = loader->loadCubeMap(this->dayTextureFiles);
-  this->nightTextureID = loader->loadCubeMap(this->nightTextureFiles);
+  this->cube = loader->load_to_vao(this->vertices, 3);
+  this->dayTextureID = loader->load_cube_map(this->dayTextureFiles);
+  this->nightTextureID = loader->load_cube_map(this->nightTextureFiles);
   this->shader = shader;
 
   this->shader->start();
