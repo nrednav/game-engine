@@ -6,41 +6,43 @@ Camera::Camera(Player* player, glm::vec3 position)
     : position(position), player(player) {}
 
 void Camera::move() {
-  this->calculateZoom();
-  this->calculatePitch();
-  this->calculateAngleAroundPlayer();
-  float horizontalDistance = this->calculateHorizontalDistance();
-  float verticalDistance = this->calculateVerticalDistance();
-  this->calculateCameraPosition(horizontalDistance, verticalDistance);
-  this->yaw = 180 - (this->player->getRotation().y + this->angleAroundPlayer);
+  this->calculate_zoom();
+  this->calculate_pitch();
+  this->calculate_angle_around_player();
+
+  float horizontal_distance = this->calculate_horizontal_distance();
+  float vertical_distance = this->calculate_vertical_distance();
+
+  this->calculate_camera_position(horizontal_distance, vertical_distance);
+  this->yaw = 180 - (this->player->getRotation().y + this->angle_around_player);
   this->yaw = fmodf(this->yaw, 360.0f);
 }
 
-void Camera::calculateZoom() {
-  int equalPressed =
+void Camera::calculate_zoom() {
+  int equal_pressed =
       glfwGetKey(glfwGetCurrentContext(), GLFW_KEY_EQUAL) == GLFW_PRESS;
-  int minusPressed =
+  int minus_pressed =
       glfwGetKey(glfwGetCurrentContext(), GLFW_KEY_MINUS) == GLFW_PRESS;
-  int leftShiftPressed =
+  int left_shift_pressed =
       glfwGetKey(glfwGetCurrentContext(), GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS;
 
-  if (leftShiftPressed && equalPressed)
-    this->distanceFromPlayer -= CAMERA_ZOOM_LEVEL;
+  if (left_shift_pressed && equal_pressed)
+    this->distance_from_player -= CAMERA_ZOOM_LEVEL;
 
-  if (leftShiftPressed && minusPressed)
-    this->distanceFromPlayer -= -CAMERA_ZOOM_LEVEL;
+  if (left_shift_pressed && minus_pressed)
+    this->distance_from_player -= -CAMERA_ZOOM_LEVEL;
 }
 
-void Camera::calculatePitch() {
-  float deltaPitch = 0.0f;
+void Camera::calculate_pitch() {
+  float delta_pitch = 0.0f;
 
   if (glfwGetKey(glfwGetCurrentContext(), GLFW_KEY_UP) == GLFW_PRESS)
-    deltaPitch = -PLAYER_TURN_SPEED * 0.01f;
+    delta_pitch = -PLAYER_TURN_SPEED * 0.01f;
 
   if (glfwGetKey(glfwGetCurrentContext(), GLFW_KEY_DOWN) == GLFW_PRESS)
-    deltaPitch = PLAYER_TURN_SPEED * 0.01f;
+    delta_pitch = PLAYER_TURN_SPEED * 0.01f;
 
-  this->pitch -= deltaPitch;
+  this->pitch -= delta_pitch;
 
   if (this->pitch < 0)
     pitch = 0;
@@ -48,35 +50,37 @@ void Camera::calculatePitch() {
     pitch = 90;
 }
 
-void Camera::calculateAngleAroundPlayer() {
-  float deltaAngle = 0.0f;
+void Camera::calculate_angle_around_player() {
+  float delta_angle = 0.0f;
 
   if (glfwGetKey(glfwGetCurrentContext(), GLFW_KEY_LEFT) == GLFW_PRESS)
-    deltaAngle = -PLAYER_TURN_SPEED * 0.03f;
+    delta_angle = -PLAYER_TURN_SPEED * 0.03f;
 
   if (glfwGetKey(glfwGetCurrentContext(), GLFW_KEY_RIGHT) == GLFW_PRESS)
-    deltaAngle = PLAYER_TURN_SPEED * 0.03f;
+    delta_angle = PLAYER_TURN_SPEED * 0.03f;
 
-  this->angleAroundPlayer -= deltaAngle;
+  this->angle_around_player -= delta_angle;
 }
 
-float Camera::calculateHorizontalDistance() {
-  float hd = this->distanceFromPlayer * glm::cos(glm::radians(this->pitch));
-  return (hd < 0) ? 0 : hd;
+float Camera::calculate_horizontal_distance() {
+  float horizontal_distance =
+      this->distance_from_player * glm::cos(glm::radians(this->pitch));
+  return (horizontal_distance < 0) ? 0 : horizontal_distance;
 }
 
-float Camera::calculateVerticalDistance() {
-  float vd = this->distanceFromPlayer * glm::sin(glm::radians(this->pitch));
-  return (vd < 0) ? 0 : vd;
+float Camera::calculate_vertical_distance() {
+  float vertical_distance =
+      this->distance_from_player * glm::sin(glm::radians(this->pitch));
+  return (vertical_distance < 0) ? 0 : vertical_distance;
 }
 
-void Camera::calculateCameraPosition(const float& horizontalDistance,
-                                     const float& verticalDistance) {
-  float theta = this->player->getRotation().y + this->angleAroundPlayer;
-  float xOffset = horizontalDistance * glm::sin(glm::radians(theta));
-  float zOffset = horizontalDistance * glm::cos(glm::radians(theta));
+void Camera::calculate_camera_position(const float& horizontal_distance,
+                                       const float& vertical_distance) {
+  float theta = this->player->getRotation().y + this->angle_around_player;
+  float x_offset = horizontal_distance * glm::sin(glm::radians(theta));
+  float z_offset = horizontal_distance * glm::cos(glm::radians(theta));
 
-  this->position.x = this->player->getPosition().x - xOffset;
-  this->position.z = this->player->getPosition().z - zOffset;
-  this->position.y = this->player->getPosition().y + verticalDistance + 5.0f;
+  this->position.x = this->player->getPosition().x - x_offset;
+  this->position.z = this->player->getPosition().z - z_offset;
+  this->position.y = this->player->getPosition().y + vertical_distance + 5.0f;
 }
