@@ -24,4 +24,4 @@ file(GLOB_RECURSE SOURCES "src/*.cpp" "src/*.h")
 
 add_executable(game-engine src/Main.cpp src/Constants.h ${SOURCES})
 target_include_directories(game-engine PUBLIC ${PROJECT_SOURCE_DIR}/include src)
-target_link_libraries(game-engine glfw GLEW::glew glm OpenGL::GL)
+target_link_libraries(game-engine glfw GLEW::glew glm::glm OpenGL::GL)
