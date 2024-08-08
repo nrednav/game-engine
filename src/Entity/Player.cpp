@@ -16,7 +16,7 @@ void Player::move(Terrain* terrain) {
   }
 
   float frameTimeSeconds =
-      (float)DisplayManager::getInstance()->getFrameTimeSeconds();
+      (float)DisplayManager::get_instance()->get_frame_time_seconds();
 
   glm::vec3 lastSafePos = this->getPosition();
 

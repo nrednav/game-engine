@@ -36,7 +36,7 @@ void SkyboxShader::loadViewMatrix(Camera* camera) {
 
   this->currentRotation +=
       SKYBOX_ROTATION_SPEED *
-      (float)DisplayManager::getInstance()->getFrameTimeSeconds();
+      (float)DisplayManager::get_instance()->get_frame_time_seconds();
 
   viewMatrix = glm::rotate(viewMatrix, glm::radians(this->currentRotation),
                            glm::vec3(0, 1, 0));

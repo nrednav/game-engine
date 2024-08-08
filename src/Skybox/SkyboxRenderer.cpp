@@ -44,7 +44,7 @@ void SkyboxRenderer::bindTextures() {
 }
 
 float SkyboxRenderer::getBlendFactor() {
-  this->time += (float)DisplayManager::getInstance()->getFrameTimeSeconds();
+  this->time += (float)DisplayManager::get_instance()->get_frame_time_seconds();
   float delta = -1 * this->time * 2 * glm::pi<float>() / SKYBOX_CYCLE_LENGTH;
 
   return (float)glm::abs(0.5f * glm::cos(glm::radians(delta)) - 0.5f);

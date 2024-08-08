@@ -5,28 +5,30 @@
 
 class DisplayManager {
 public:
-  static DisplayManager *getInstance();
-  bool createDisplay();
-  void updateDisplay();
-  void closeDisplay();
+  static DisplayManager* get_instance();
+  bool create_display();
+  void update_display();
+  void close_display();
 
-  inline GLFWwindow *getDisplay() const { return this->display; }
-  inline double getFrameTimeSeconds() const { return this->deltaFrameTime; }
+  inline GLFWwindow* get_display() const { return this->display; }
+  inline double get_frame_time_seconds() const {
+    return this->delta_frame_time;
+  }
 
 private:
   DisplayManager() {}
 
-  double lastFrameTime;
-  double deltaFrameTime;
+  double last_frame_time;
+  double delta_frame_time;
 
-  GLFWwindow *display;
-  static DisplayManager *instance;
+  GLFWwindow* display;
+  static DisplayManager* instance;
 
-  void centerWindow(GLFWwindow *window, GLFWmonitor *monitor);
+  void center_window(GLFWwindow* window, GLFWmonitor* monitor);
 
   // Callbacks
-  static void keyPressed(GLFWwindow *window, int key, int scancode, int action,
-                         int mods);
+  static void key_pressed(GLFWwindow* window, int key, int scancode, int action,
+                          int mods);
 };
 
 #endif // !DISPLAYMANAGER_H

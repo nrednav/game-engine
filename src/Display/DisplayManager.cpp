@@ -6,16 +6,17 @@
 
 DisplayManager* DisplayManager::instance = nullptr;
 
-DisplayManager* DisplayManager::getInstance() {
+DisplayManager* DisplayManager::get_instance() {
   return instance = (instance != nullptr) ? instance : new DisplayManager();
 }
 
-bool DisplayManager::createDisplay() {
+bool DisplayManager::create_display() {
   // Initialize GLFW
   if (!glfwInit()) {
     std::cout << "Failed to initialize GLFW..." << std::endl;
     return false;
   }
+
   std::cout << "GLFW initialized successfully..." << std::endl;
 
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -29,16 +30,17 @@ bool DisplayManager::createDisplay() {
     glfwTerminate();
     return false;
   }
+
   std::cout << "Created display..." << std::endl;
 
   glfwMakeContextCurrent(this->display);
-  this->centerWindow(display, glfwGetPrimaryMonitor());
-  glfwSetKeyCallback(this->display, keyPressed);
+  this->center_window(display, glfwGetPrimaryMonitor());
+  glfwSetKeyCallback(this->display, key_pressed);
 
   glViewport(0, 0, DISPLAY_WIDTH, DISPLAY_HEIGHT);
   glfwSwapInterval(1);
   glfwSetInputMode(this->display, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-  this->lastFrameTime = glfwGetTime();
+  this->last_frame_time = glfwGetTime();
 
   // Load GLEW
   if (glewInit() != GLEW_OK) {
@@ -50,18 +52,18 @@ bool DisplayManager::createDisplay() {
   return true;
 }
 
-void DisplayManager::updateDisplay() {
+void DisplayManager::update_display() {
   glfwSwapBuffers(display);
   glfwPollEvents();
 
   double currentFrameTime = glfwGetTime();
-  this->deltaFrameTime = currentFrameTime - this->lastFrameTime;
-  this->lastFrameTime = currentFrameTime;
+  this->delta_frame_time = currentFrameTime - this->last_frame_time;
+  this->last_frame_time = currentFrameTime;
 }
 
-void DisplayManager::closeDisplay() { glfwTerminate(); }
+void DisplayManager::close_display() { glfwTerminate(); }
 
-void DisplayManager::centerWindow(GLFWwindow* window, GLFWmonitor* monitor) {
+void DisplayManager::center_window(GLFWwindow* window, GLFWmonitor* monitor) {
   if (!monitor)
     return;
 
@@ -80,8 +82,8 @@ void DisplayManager::centerWindow(GLFWwindow* window, GLFWmonitor* monitor) {
 }
 
 // Callbacks
-void DisplayManager::keyPressed(GLFWwindow* window, int key, int scancode,
-                                int action, int mods) {
+void DisplayManager::key_pressed(GLFWwindow* window, int key, int scancode,
+                                 int action, int mods) {
   if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
     glfwSetWindowShouldClose(window, GL_TRUE);
 }

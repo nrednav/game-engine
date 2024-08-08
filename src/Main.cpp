@@ -7,12 +7,12 @@
 #include <iostream>
 
 int main() {
-  if (!DisplayManager::getInstance()->createDisplay()) {
+  if (!DisplayManager::get_instance()->create_display()) {
     std::cout << "Failed to create window..." << std::endl;
     return -1;
   }
 
-  GLFWwindow* display = DisplayManager::getInstance()->getDisplay();
+  GLFWwindow* display = DisplayManager::get_instance()->get_display();
   Loader* loader = new Loader();
   MasterRenderer* renderer = new MasterRenderer(loader);
 
@@ -65,13 +65,13 @@ int main() {
     renderer->renderScene(entityManager->getEntities(), terrains,
                           entityManager->getLights(), player, camera);
 
-    DisplayManager::getInstance()->updateDisplay();
+    DisplayManager::get_instance()->update_display();
   }
 
   entityManager->cleanup();
   renderer->cleanup();
   loader->cleanup();
-  DisplayManager::getInstance()->closeDisplay();
+  DisplayManager::get_instance()->close_display();
 
   return 0;
 }
