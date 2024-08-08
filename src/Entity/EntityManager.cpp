@@ -4,132 +4,141 @@
 
 EntityManager* EntityManager::instance = nullptr;
 
-EntityManager* EntityManager::getInstance() {
+EntityManager* EntityManager::get_instance() {
   return instance = (instance != nullptr) ? instance : new EntityManager();
 }
 
-void EntityManager::initialize(Loader* loader, Terrain* initialTerrain) {
+void EntityManager::initialize(Loader* loader, Terrain* initial_terrain) {
   this->loader = loader;
-  this->activeTerrain = initialTerrain;
-  this->loadEntityModels();
+  this->active_terrain = initial_terrain;
+  this->load_entity_models();
 }
 
-void EntityManager::generateEntities(int count) {
-  this->createLights();
+void EntityManager::generate_entities(int count) {
+  this->create_lights();
 
   for (int i = 0; i < count; i++) {
     if (i % 10 == 0) {
-      this->createEntity("grass", 0.9f);
-      this->createEntity("flower", 2.3f);
-      this->createEntity("fern", 0.9f);
+      this->create_entity("grass", 0.9f);
+      this->create_entity("flower", 2.3f);
+      this->create_entity("fern", 0.9f);
     }
 
     if (i % 5 == 0) {
-      float treeScale = RNG::randomFloat() * 4 + 1;
-      this->createEntity("pine", treeScale);
-      this->createEntity("lowPolyTree", treeScale);
+      float tree_scale = RNG::randomFloat() * 4 + 1;
+      this->create_entity("pine", tree_scale);
+      this->create_entity("low_poly_tree", tree_scale);
     }
   }
 }
 
-void EntityManager::loadEntityModels() {
+void EntityManager::load_entity_models() {
   // Objects
-  this->models["player"] = this->createModel("player", loader);
-  this->models["lamp"] = this->createModel("lamp", loader, false, true);
+  this->models["player"] = this->create_textured_model("player", loader);
+  this->models["lamp"] =
+      this->create_textured_model("lamp", loader, false, true);
 
   // Environment
-  this->models["pine"] = this->createModel("pine", loader);
-  this->models["lowPolyTree"] = this->createModel("lowPolyTree", loader);
-  this->models["grass"] = this->createModel("grass", loader, true, true);
-  this->models["flower"] = this->createModel("flower", loader, true, true);
+  this->models["pine"] = this->create_textured_model("pine", loader);
+  this->models["low_poly_tree"] =
+      this->create_textured_model("low_poly_tree", loader);
+  this->models["grass"] =
+      this->create_textured_model("grass", loader, true, true);
+  this->models["flower"] =
+      this->create_textured_model("flower", loader, true, true);
   this->models["fern"] =
-      this->createModel("fern", loader, true, false, true, 2);
+      this->create_textured_model("fern", loader, true, false, true, 2);
 }
 
-void EntityManager::recalculateEntityPositions(Terrain* currentTerrain) {
+void EntityManager::recalculate_entity_positions(Terrain* current_terrain) {
   for (unsigned int i = 0; i < this->entities.size(); i++) {
-    float x = this->entities[i]->getPosition().x;
-    float z = this->entities[i]->getPosition().z;
-    float y = currentTerrain->getTerrainHeightAt(x, z);
-    this->entities[i]->setPosition(glm::vec3(x, y, z));
+    float x = this->entities[i]->get_position().x;
+    float z = this->entities[i]->get_position().z;
+    float y = current_terrain->getTerrainHeightAt(x, z);
+    this->entities[i]->set_position(glm::vec3(x, y, z));
   }
 }
 
-Player* EntityManager::createPlayer(std::string name, float scaleFactor) {
+Player* EntityManager::create_player(std::string name, float scale_factor) {
   glm::vec3 position;
   position.x = RNG::randomFloat() * 800 - 400;
   position.z = RNG::randomFloat() * -600;
-  position.y = this->activeTerrain->getTerrainHeightAt(position.x, position.z);
+  position.y = this->active_terrain->getTerrainHeightAt(position.x, position.z);
 
   glm::vec3 rotation = glm::vec3(0, 0, 0);
-  glm::vec3 scale = glm::vec3(scaleFactor, scaleFactor, scaleFactor);
+  glm::vec3 scale = glm::vec3(scale_factor, scale_factor, scale_factor);
 
   return new Player(this->models[name], position, rotation, scale);
 }
 
 /* Private helper methods */
-void EntityManager::createEntity(std::string name, float scaleFactor,
-                                 bool duplicate) {
+void EntityManager::create_entity(std::string name, float scale_factor,
+                                  bool duplicate) {
   TexturedModel* model = this->models[name];
 
   glm::vec3 position;
   position.x = RNG::randomFloat() * 800 - 400;
   position.z = RNG::randomFloat() * -600;
-  position.y = this->activeTerrain->getTerrainHeightAt(position.x, position.z);
+  position.y = this->active_terrain->getTerrainHeightAt(position.x, position.z);
 
   glm::vec3 rotation = glm::vec3(0, RNG::randomFloat() * 360, 0);
-  glm::vec3 scale = glm::vec3(scaleFactor, scaleFactor, scaleFactor);
+  glm::vec3 scale = glm::vec3(scale_factor, scale_factor, scale_factor);
 
-  if (model->getTexture()->getNumberOfRows() > 1)
+  if (model->getTexture()->getNumberOfRows() > 1) {
     this->entities.push_back(
         new Entity(model, position, rotation, scale, RNG::randomInt(4)));
-  else
+  } else {
     this->entities.push_back(new Entity(model, position, rotation, scale));
+  }
 
   if (duplicate) {
     Entity* lastEntity = this->entities[this->entities.size() - 1];
 
-    float x = -(lastEntity->getPosition().x);
-    float z = -(lastEntity->getPosition().z);
-    float y = this->activeTerrain->getTerrainHeightAt(x, z);
+    float x = -(lastEntity->get_position().x);
+    float z = -(lastEntity->get_position().z);
+    float y = this->active_terrain->getTerrainHeightAt(x, z);
 
     Entity* duplicate =
-        new Entity(lastEntity->getModel(), glm::vec3(x, y, z),
-                   lastEntity->getRotation(), lastEntity->getScale());
+        new Entity(lastEntity->get_model(), glm::vec3(x, y, z),
+                   lastEntity->get_rotation(), lastEntity->get_scale());
 
     this->entities.push_back(duplicate);
   }
 }
 
-TexturedModel* EntityManager::createModel(std::string name, Loader* loader,
-                                          bool hasTransparency,
-                                          bool usesFakeLighting,
-                                          bool usesTextureAtlas,
-                                          int numOfRowsInAtlas) {
-  RawModel* entityRawModel = ObjLoader::load_model(name, loader);
+TexturedModel* EntityManager::create_textured_model(
+    std::string name, Loader* loader, bool has_transparency,
+    bool uses_fake_lighting, bool uses_texture_atlas, int atlas_row_count) {
 
-  ModelTexture* entityTexture = new ModelTexture(loader->loadTexture(name));
-  if (usesTextureAtlas)
-    entityTexture->setNumberOfRows(numOfRowsInAtlas);
+  RawModel* entity_raw_model = ObjLoader::load_model(name, loader);
+  ModelTexture* entity_texture = new ModelTexture(loader->loadTexture(name));
 
-  TexturedModel* entityTexturedModel =
-      new TexturedModel(entityRawModel, entityTexture);
+  if (uses_texture_atlas) {
+    entity_texture->setNumberOfRows(atlas_row_count);
+  }
 
-  if (hasTransparency)
-    entityTexturedModel->getTexture()->setTransparency(true);
+  TexturedModel* entity_textured_model =
+      new TexturedModel(entity_raw_model, entity_texture);
 
-  if (usesFakeLighting)
-    entityTexturedModel->getTexture()->useFakeLighting(true);
+  if (has_transparency) {
+    entity_textured_model->getTexture()->setTransparency(true);
+  }
 
-  return entityTexturedModel;
+  if (uses_fake_lighting) {
+    entity_textured_model->getTexture()->useFakeLighting(true);
+  }
+
+  return entity_textured_model;
 }
 
-void EntityManager::createLights() {
+void EntityManager::create_lights() {
   Light* sun = new Light(glm::vec3(0, 1000, 0), glm::vec3(1, 1, 1));
-  this->createEntity("lamp", 1.0f, false);
+
+  this->create_entity("lamp", 1.0f, false);
+
   Entity* lamp = this->entities[this->entities.size() - 1];
 
-  glm::vec3 position = lamp->getPosition();
+  glm::vec3 position = lamp->get_position();
   position.y += 12.0f;
 
   glm::vec3 color = glm::vec3(2, 2, 0);
@@ -141,7 +150,7 @@ void EntityManager::createLights() {
 
 void EntityManager::cleanup() {
   this->loader = nullptr;
-  this->activeTerrain = nullptr;
+  this->active_terrain = nullptr;
   this->entities.clear();
   this->models.clear();
 }

@@ -12,34 +12,36 @@ public:
       : model(model), position(position), rotation(rotation), scale(scale) {}
 
   Entity(TexturedModel* model, glm::vec3 position, glm::vec3 rotation,
-         glm::vec3 scale, int textureIndex)
+         glm::vec3 scale, int texture_index)
       : model(model), position(position), rotation(rotation), scale(scale),
-        textureIndex(textureIndex) {}
+        texture_index(texture_index) {}
 
-  TexturedModel* getModel() const { return this->model; }
-  glm::vec3 getPosition() const { return this->position; }
-  glm::vec3 getRotation() const { return this->rotation; }
-  glm::vec3 getScale() const { return this->scale; }
+  TexturedModel* get_model() const { return this->model; }
+  glm::vec3 get_position() const { return this->position; }
+  glm::vec3 get_rotation() const { return this->rotation; }
+  glm::vec3 get_scale() const { return this->scale; }
 
-  void setModel(TexturedModel* newModel) { this->model = newModel; }
-  void setPosition(glm::vec3 newPosition) { this->position = newPosition; }
-  void setRotation(glm::vec3 newRotation) { this->rotation = newRotation; }
-  void setScale(glm::vec3 newScale) { this->scale = newScale; }
+  void set_model(TexturedModel* new_model) { this->model = new_model; }
+  void set_position(glm::vec3 new_position) { this->position = new_position; }
+  void set_rotation(glm::vec3 new_rotation) { this->rotation = new_rotation; }
+  void set_scale(glm::vec3 new_scale) { this->scale = new_scale; }
 
-  void changePosition(glm::vec3 delta) { this->position += delta; }
-  void changeRotation(glm::vec3 delta) { this->rotation += delta; }
-  void changeScale(glm::vec3 delta) { this->scale += delta; }
+  void change_position(glm::vec3 delta) { this->position += delta; }
+  void change_rotation(glm::vec3 delta) { this->rotation += delta; }
+  void change_scale(glm::vec3 delta) { this->scale += delta; }
 
-  float getTextureXOffset() {
-    int numOfRows = this->model->getTexture()->getNumberOfRows();
-    int column = this->textureIndex % numOfRows;
-    return (float)column / (float)numOfRows;
+  float get_texture_x_offset() {
+    int row_count = this->model->getTexture()->getNumberOfRows();
+    int column = this->texture_index % row_count;
+
+    return (float)column / (float)row_count;
   }
 
-  float getTextureYOffset() {
-    int numOfRows = this->model->getTexture()->getNumberOfRows();
-    int row = this->textureIndex / numOfRows;
-    return (float)row / (float)numOfRows;
+  float get_texture_y_offset() {
+    int row_count = this->model->getTexture()->getNumberOfRows();
+    int row = this->texture_index / row_count;
+
+    return (float)row / (float)row_count;
   }
 
 private:
@@ -48,7 +50,7 @@ private:
   glm::vec3 rotation;
   glm::vec3 scale;
 
-  int textureIndex = 0;
+  int texture_index = 0;
 };
 
 #endif // !ENTITY_H

@@ -76,7 +76,7 @@ void MasterRenderer::renderScene(const std::vector<Entity*>& entities,
 }
 
 void MasterRenderer::processEntity(Entity* entity) {
-  TexturedModel* model = entity->getModel();
+  TexturedModel* model = entity->get_model();
   std::vector<Entity*> batch = this->entities[model];
 
   if (batch.size() > 0) {

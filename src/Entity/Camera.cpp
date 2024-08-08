@@ -14,7 +14,8 @@ void Camera::move() {
   float vertical_distance = this->calculate_vertical_distance();
 
   this->calculate_camera_position(horizontal_distance, vertical_distance);
-  this->yaw = 180 - (this->player->getRotation().y + this->angle_around_player);
+  this->yaw =
+      180 - (this->player->get_rotation().y + this->angle_around_player);
   this->yaw = fmodf(this->yaw, 360.0f);
 }
 
@@ -76,11 +77,11 @@ float Camera::calculate_vertical_distance() {
 
 void Camera::calculate_camera_position(const float& horizontal_distance,
                                        const float& vertical_distance) {
-  float theta = this->player->getRotation().y + this->angle_around_player;
+  float theta = this->player->get_rotation().y + this->angle_around_player;
   float x_offset = horizontal_distance * glm::sin(glm::radians(theta));
   float z_offset = horizontal_distance * glm::cos(glm::radians(theta));
 
-  this->position.x = this->player->getPosition().x - x_offset;
-  this->position.z = this->player->getPosition().z - z_offset;
-  this->position.y = this->player->getPosition().y + vertical_distance + 5.0f;
+  this->position.x = this->player->get_position().x - x_offset;
+  this->position.z = this->player->get_position().z - z_offset;
+  this->position.y = this->player->get_position().y + vertical_distance + 5.0f;
 }

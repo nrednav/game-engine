@@ -18,37 +18,38 @@ void Player::move(Terrain* terrain) {
   float frameTimeSeconds =
       (float)DisplayManager::get_instance()->get_frame_time_seconds();
 
-  glm::vec3 lastSafePos = this->getPosition();
+  glm::vec3 lastSafePos = this->get_position();
 
   // Horizontal Movement
-  this->changeRotation(
+  this->change_rotation(
       glm::vec3(0, this->currentTurnSpeed * frameTimeSeconds, 0));
   float distance = this->currentSpeed * frameTimeSeconds;
-  float dx = distance * glm::sin(glm::radians(this->getRotation().y));
-  float dz = distance * glm::cos(glm::radians(this->getRotation().y));
+  float dx = distance * glm::sin(glm::radians(this->get_rotation().y));
+  float dz = distance * glm::cos(glm::radians(this->get_rotation().y));
 
-  bool xOutOfBounds = dx + this->getPosition().x >= TERRAIN_SIZE ||
-                      dx + this->getPosition().x <= -TERRAIN_SIZE;
-  bool zOutOfBounds = dz + this->getPosition().z >= TERRAIN_SIZE ||
-                      dz + this->getPosition().z <= -TERRAIN_SIZE;
+  bool xOutOfBounds = dx + this->get_position().x >= TERRAIN_SIZE ||
+                      dx + this->get_position().x <= -TERRAIN_SIZE;
+  bool zOutOfBounds = dz + this->get_position().z >= TERRAIN_SIZE ||
+                      dz + this->get_position().z <= -TERRAIN_SIZE;
 
   if (xOutOfBounds || zOutOfBounds)
-    this->setPosition(lastSafePos);
+    this->set_position(lastSafePos);
   else
-    this->changePosition(glm::vec3(dx, 0, dz));
+    this->change_position(glm::vec3(dx, 0, dz));
 
   // Vertical Movement (E.g. jump)
   this->verticalSpeed += PLAYER_GRAVITY * frameTimeSeconds;
-  this->changePosition(glm::vec3(0, this->verticalSpeed * frameTimeSeconds, 0));
+  this->change_position(
+      glm::vec3(0, this->verticalSpeed * frameTimeSeconds, 0));
 
-  float terrainHeight =
-      terrain->getTerrainHeightAt(this->getPosition().x, this->getPosition().z);
+  float terrainHeight = terrain->getTerrainHeightAt(this->get_position().x,
+                                                    this->get_position().z);
 
-  if (this->getPosition().y < terrainHeight) {
+  if (this->get_position().y < terrainHeight) {
     this->verticalSpeed = 0;
     this->isAirborne = false;
-    this->setPosition(
-        glm::vec3(this->getPosition().x, terrainHeight, this->getPosition().z));
+    this->set_position(glm::vec3(this->get_position().x, terrainHeight,
+                                 this->get_position().z));
   }
 }
 

@@ -40,30 +40,30 @@ int main() {
   terrains[1][1] =
       new Terrain(1, 1, loader, texturePack, blendMap, "heightmap");
 
-  EntityManager* entityManager = EntityManager::getInstance();
+  EntityManager* entityManager = EntityManager::get_instance();
   entityManager->initialize(loader, terrains[0][0]);
-  entityManager->generateEntities(ENTITY_COUNT);
+  entityManager->generate_entities(ENTITY_COUNT);
 
-  Player* player = entityManager->createPlayer("player", 1.0f);
+  Player* player = entityManager->create_player("player", 1.0f);
   Camera* camera = new Camera(player, glm::vec3(0, 5, 0));
 
   int previousGridX = 0, previousGridZ = 0;
 
   while (!glfwWindowShouldClose(display)) {
-    int gridX = (int)(player->getPosition().x / TERRAIN_SIZE + 1);
-    int gridZ = (int)(player->getPosition().z / TERRAIN_SIZE + 1);
+    int gridX = (int)(player->get_position().x / TERRAIN_SIZE + 1);
+    int gridZ = (int)(player->get_position().z / TERRAIN_SIZE + 1);
 
     if (gridX != previousGridX || gridZ != previousGridZ) {
       previousGridX = gridX;
       previousGridZ = gridZ;
-      entityManager->recalculateEntityPositions(terrains[gridX][gridZ]);
+      entityManager->recalculate_entity_positions(terrains[gridX][gridZ]);
     }
 
     player->move(terrains[gridX][gridZ]);
     camera->move();
 
-    renderer->renderScene(entityManager->getEntities(), terrains,
-                          entityManager->getLights(), player, camera);
+    renderer->renderScene(entityManager->get_entities(), terrains,
+                          entityManager->get_lights(), player, camera);
 
     DisplayManager::get_instance()->update_display();
   }

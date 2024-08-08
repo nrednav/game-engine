@@ -63,8 +63,8 @@ void EntityRenderer::unbindTexturedModel() {
 
 void EntityRenderer::prepareEntity(Entity* entity) {
   glm::mat4 transformationMatrix = Math::createTransformationMatrix(
-      entity->getPosition(), entity->getRotation(), entity->getScale());
+      entity->get_position(), entity->get_rotation(), entity->get_scale());
   this->shader->loadTransformationMatrix(transformationMatrix);
-  this->shader->loadTextureOffset(entity->getTextureXOffset(),
-                                  entity->getTextureYOffset());
+  this->shader->loadTextureOffset(entity->get_texture_x_offset(),
+                                  entity->get_texture_y_offset());
 }
