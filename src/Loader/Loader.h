@@ -9,31 +9,28 @@
 
 class Loader {
 public:
-	Loader() {}
+  Loader() {}
 
-	RawModel* loadToVAO(
-		std::vector<float>& positions, 
-		std::vector<int>& indices,
-		std::vector<float>& textureCoords,
-		std::vector<float>& normals
-	);
-	RawModel* loadToVAO(std::vector<float>& positions, int dimensions);
-	int loadTexture(std::string fileName, bool repeat = false);
-	int loadCubeMap(std::vector<std::string>& textureFiles);
+  RawModel* loadToVAO(std::vector<float>& positions, std::vector<int>& indices,
+                      std::vector<float>& textureCoords,
+                      std::vector<float>& normals);
+  RawModel* loadToVAO(std::vector<float>& positions, int dimensions);
+  int loadTexture(std::string fileName, bool repeat = false);
+  int loadCubeMap(std::vector<std::string>& textureFiles);
 
-	void cleanup();
+  void cleanup();
 
 private:
-	std::vector<unsigned int> vaoList;
-	std::vector<unsigned int> vboList;
-	std::vector<unsigned int> textures;
+  std::vector<unsigned int> vaoList;
+  std::vector<unsigned int> vboList;
+  std::vector<unsigned int> textures;
 
-	unsigned int createVAO();
-	void unbindVAO();
-	void storeDataInAttributeList(int attributeID, int componentCount,
-		std::vector<float>& data); 
-	void bindIndicesBuffer(std::vector<int>& indices);
-	TextureData* decodeTextureFile(std::string fileName);
+  unsigned int createVAO();
+  void unbindVAO();
+  void storeDataInAttributeList(int attributeID, int componentCount,
+                                std::vector<float>& data);
+  void bindIndicesBuffer(std::vector<int>& indices);
+  TextureData* decodeTextureFile(std::string fileName);
 };
 
 #endif // !LOADER_H
