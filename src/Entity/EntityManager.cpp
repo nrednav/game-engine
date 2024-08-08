@@ -1,5 +1,5 @@
 #include "EntityManager.h"
-#include "Loader/OBJLoader.h"
+#include "Loader/ObjLoader.h"
 #include "Utils/RNG.h"
 
 EntityManager* EntityManager::instance = nullptr;
@@ -106,7 +106,7 @@ TexturedModel* EntityManager::createModel(std::string name, Loader* loader,
                                           bool usesFakeLighting,
                                           bool usesTextureAtlas,
                                           int numOfRowsInAtlas) {
-  RawModel* entityRawModel = OBJLoader::loadModel_v2(name, loader);
+  RawModel* entityRawModel = ObjLoader::load_model(name, loader);
 
   ModelTexture* entityTexture = new ModelTexture(loader->loadTexture(name));
   if (usesTextureAtlas)
