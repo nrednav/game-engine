@@ -12,12 +12,12 @@ public:
   void jump();
 
 private:
-  float currentSpeed = 0;
-  float currentTurnSpeed = 0;
-  float verticalSpeed = 0;
-  bool isAirborne = false;
+  float current_speed = 0;
+  float current_turn_speed = 0;
+  float vertical_speed = 0;
+  bool is_airborne = false;
 
-  void detectInput();
+  void detect_input();
 };
 
 #endif // !PLAYER_H
