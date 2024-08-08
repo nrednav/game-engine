@@ -44,7 +44,9 @@ RawModel* ObjLoader::load_model(std::string fileName, Loader* loader) {
       double y = strtod(token, &stop);
 
       textures.push_back(glm::vec2(x, y));
-    } else if (type[0] == 'v' && type[1] == 'n') {
+    }
+    // VN is vertex normals
+    else if (type[0] == 'v' && type[1] == 'n') {
       double x = strtod(token, &stop);
 
       token = stop + 1;
