@@ -1,9 +1,7 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include "GLFW/glfw3.h"
 #include "Player.h"
-#include "glm/glm.hpp"
 
 class Camera {
 public:

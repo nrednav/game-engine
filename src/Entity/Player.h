@@ -6,17 +6,18 @@
 
 class Player : public Entity {
 public:
-	Player(TexturedModel* model, glm::vec3 position, glm::vec3 rotation, glm::vec3 scale);
-	void move(Terrain* terrain);
-	void jump();
+  Player(TexturedModel* model, glm::vec3 position, glm::vec3 rotation,
+         glm::vec3 scale);
+  void move(Terrain* terrain);
+  void jump();
 
 private:
-	float currentSpeed = 0;
-	float currentTurnSpeed = 0;
-	float verticalSpeed = 0;
-	bool isAirborne = false;
+  float currentSpeed = 0;
+  float currentTurnSpeed = 0;
+  float verticalSpeed = 0;
+  bool isAirborne = false;
 
-	void detectInput();
+  void detectInput();
 };
 
 #endif // !PLAYER_H

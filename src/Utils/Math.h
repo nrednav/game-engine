@@ -10,7 +10,7 @@ public:
                                               glm::vec3 rotation,
                                               glm::vec3 scale);
 
-  static glm::mat4 createViewMatrix(Camera *camera);
+  static glm::mat4 createViewMatrix(Camera* camera);
 
   static float getBarryCentricCoordinate(glm::vec3 p1, glm::vec3 p2,
                                          glm::vec3 p3, glm::vec2 objectPos);

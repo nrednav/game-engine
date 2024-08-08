@@ -1,8 +1,6 @@
 #ifndef MASTERRENDERER_H
 #define MASTERRENDERER_H
 
-#include "glm/glm.hpp"
-
 #include "EntityRenderer.h"
 #include "Shader/StaticShader.h"
 #include "Skybox/SkyboxRenderer.h"

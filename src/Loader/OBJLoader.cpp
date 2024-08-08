@@ -1,12 +1,6 @@
 #include "OBJLoader.h"
-#include "glm/glm.hpp"
-
+#include <cstring>
 #include <stdio.h>
-
-#include <fstream>
-#include <iterator>
-#include <regex>
-#include <sstream>
 
 RawModel* OBJLoader::loadModel_v2(std::string fileName, Loader* loader) {
   // Open the file as read only
@@ -14,10 +8,6 @@ RawModel* OBJLoader::loadModel_v2(std::string fileName, Loader* loader) {
   if (!file) {
     printf("Failed to open: %s\n", fileName.c_str());
   }
-  // if (fopen_s(&file, ("assets/models/" + fileName + ".obj").c_str(), "r") !=
-  //     0) {
-  //   printf("Failed to open: %s\n", fileName);
-  // }
 
   // Storage variables
   std::vector<float> vertices, texturesArray, normalsArray;

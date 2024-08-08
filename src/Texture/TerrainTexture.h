@@ -3,13 +3,12 @@
 
 class TerrainTexture {
 public:
-	TerrainTexture(unsigned int textureID)
-		: textureID(textureID) {}
+  TerrainTexture(unsigned int textureID) : textureID(textureID) {}
 
-	unsigned int getTextureID() const { return this->textureID; }
+  unsigned int getTextureID() const { return this->textureID; }
 
 private:
-	unsigned int textureID;
+  unsigned int textureID;
 };
 
 #endif // !TERRAINTEXTURE_H

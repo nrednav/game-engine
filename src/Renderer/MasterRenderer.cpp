@@ -2,8 +2,6 @@
 #include "MasterRenderer.h"
 #include "Constants.h"
 
-#include <iostream>
-
 MasterRenderer::MasterRenderer(Loader* loader) {
   this->enableCulling();
   this->entityShader = new StaticShader("src/Shader/vertexShader.txt",

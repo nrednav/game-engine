@@ -29,14 +29,18 @@ void SkyboxShader::loadProjectionMatrix(glm::mat4 matrix) {
 
 void SkyboxShader::loadViewMatrix(Camera* camera) {
   glm::mat4 viewMatrix = Math::createViewMatrix(camera);
+
   viewMatrix[3][0] = 0;
   viewMatrix[3][1] = 0;
   viewMatrix[3][2] = 0;
+
   this->currentRotation +=
       SKYBOX_ROTATION_SPEED *
       (float)DisplayManager::getInstance()->getFrameTimeSeconds();
+
   viewMatrix = glm::rotate(viewMatrix, glm::radians(this->currentRotation),
                            glm::vec3(0, 1, 0));
+
   loadMatrix(this->location_viewMatrix, viewMatrix);
 }
 

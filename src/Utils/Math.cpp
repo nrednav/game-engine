@@ -6,7 +6,6 @@
 glm::mat4 Math::createTransformationMatrix(glm::vec3 translation,
                                            glm::vec3 rotation,
                                            glm::vec3 scale) {
-  glm::mat4 unit = glm::mat4(1.0f);
   glm::mat4 translationMatrix = glm::translate(translation);
   glm::mat4 rotationMatrix =
       glm::rotate(glm::radians(rotation.x), glm::vec3(1, 0, 0)) *
@@ -29,6 +28,7 @@ glm::mat4 Math::createViewMatrix(Camera* camera) {
   glm::vec3 inverseCameraPosition =
       glm::vec3(-cameraPosition.x, -cameraPosition.y, -cameraPosition.z);
   viewMatrix = glm::translate(viewMatrix, inverseCameraPosition);
+
   return viewMatrix;
 }
 
@@ -42,5 +42,6 @@ float Math::getBarryCentricCoordinate(glm::vec3 p1, glm::vec3 p2, glm::vec3 p3,
               (p1.x - p3.x) * (objectPos.y - p3.z)) /
              det;
   float l3 = 1.0f - l1 - l2;
+
   return l1 * p1.y + l2 * p2.y + l3 * p3.y;
 }

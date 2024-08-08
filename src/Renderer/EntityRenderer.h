@@ -9,15 +9,15 @@
 
 class EntityRenderer {
 public:
-	EntityRenderer(StaticShader* shader, glm::mat4& projectionMatrix);
-	void render(std::map<TexturedModel*, std::vector<Entity*>>& entities);
+  EntityRenderer(StaticShader* shader, glm::mat4& projectionMatrix);
+  void render(std::map<TexturedModel*, std::vector<Entity*>>& entities);
 
 private:
-	StaticShader* shader;
+  StaticShader* shader;
 
-	void prepareTexturedModel(TexturedModel* model);
-	void unbindTexturedModel();
-	void prepareEntity(Entity* entity);
+  void prepareTexturedModel(TexturedModel* model);
+  void unbindTexturedModel();
+  void prepareEntity(Entity* entity);
 };
 
 #endif // !ENTITYRENDERER_H

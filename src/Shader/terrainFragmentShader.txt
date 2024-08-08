@@ -39,7 +39,7 @@ void main(void) {
 
 	vec3 totalDiffuse = vec3(0.0);
 	vec3 totalSpecular = vec3(0.0);
-	
+
 	for (int i = 0; i < MAX_LIGHT_COUNT; i++) {
 		float distance = length(toLightVector[i]);
 		float attenuationFactor = lightAttenuation[i].x

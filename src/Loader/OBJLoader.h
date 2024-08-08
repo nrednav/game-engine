@@ -3,8 +3,8 @@
 
 #include "Loader.h"
 #include "Model/RawModel.h"
-#include "glm/glm.hpp"
 
+#include <glm/glm.hpp>
 #include <string>
 #include <vector>
 
@@ -12,7 +12,7 @@ class OBJLoader {
 public:
   OBJLoader() {}
   // static RawModel* loadModel(std::string fileName, Loader* loader);
-  static RawModel *loadModel_v2(std::string fileName, Loader *loader);
+  static RawModel* loadModel_v2(std::string fileName, Loader* loader);
 
 private:
   // static void loadVertexPositions(std::vector<glm::vec3>& vertices,
@@ -25,11 +25,11 @@ private:
   // finalTextureCoordinates, 	std::vector<float>& finalNormals,
   // std::string line
   //);
-  static void processVertices_v2(char *vertexData, std::vector<int> &indices,
-                                 std::vector<glm::vec2> &textures,
-                                 std::vector<float> &texturesArray,
-                                 std::vector<glm::vec3> &normals,
-                                 std::vector<float> &normalsArray);
+  static void processVertices_v2(char* vertexData, std::vector<int>& indices,
+                                 std::vector<glm::vec2>& textures,
+                                 std::vector<float>& texturesArray,
+                                 std::vector<glm::vec3>& normals,
+                                 std::vector<float>& normalsArray);
 };
 
 #endif // !OBJLOADER_H

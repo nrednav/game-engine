@@ -1,11 +1,8 @@
 #include "Display/DisplayManager.h"
 #include "Loader/Loader.h"
-#include "Loader/OBJLoader.h"
 #include "Renderer/MasterRenderer.h"
-#include "Shader/StaticShader.h"
 #include "Entity/EntityManager.h"
 #include "Constants.h"
-
 #include <vector>
 #include <iostream>
 
