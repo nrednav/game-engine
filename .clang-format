@@ -1,6 +1,14 @@
-BasedOnStyle: LLVM
-
+Language: Cpp
+IndentWidth: 2
 UseTab: Never
+ColumnLimit: 80
+ObjCBlockIndentWidth: 2
+ContinuationIndentWidth: 2
 PointerAlignment: Left
 ReferenceAlignment: Left
+BinPackArguments: false
+BinPackParameters: false
+AlignAfterOpenBracket: BlockIndent
+IndentCaseLabels: true
+AllowAllParametersOfDeclarationOnNextLine: false
 SortIncludes: false
