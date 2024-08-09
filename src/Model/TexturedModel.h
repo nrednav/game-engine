@@ -7,14 +7,14 @@
 class TexturedModel {
 public:
   TexturedModel(RawModel* model, ModelTexture* texture)
-      : rawModel(model), texture(texture) {}
+      : raw_model(model), texture(texture) {}
 
-  RawModel* getRawModel() const { return this->rawModel; }
-  ModelTexture* getTexture() const { return this->texture; }
+  RawModel* get_raw_model() const { return this->raw_model; }
+  ModelTexture* get_texture() const { return this->texture; }
 
 private:
-  RawModel* rawModel;
+  RawModel* raw_model;
   ModelTexture* texture;
 };
 
-#endif // !TEXTUREMODEL_H
+#endif // !TEXTUREDMODEL_H
