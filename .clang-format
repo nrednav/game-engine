@@ -11,4 +11,5 @@ BinPackParameters: false
 AlignAfterOpenBracket: BlockIndent
 IndentCaseLabels: true
 AllowAllParametersOfDeclarationOnNextLine: false
+AllowAllArgumentsOnNextLine: false
 SortIncludes: false
