@@ -5,27 +5,31 @@
 #include "Model/RawModel.h"
 #include "Texture/TerrainTexturePack.h"
 #include "glm/glm.hpp"
-
 #include "stb_image.h"
-
 #include <string>
 
 class Terrain {
 public:
-  Terrain(float gridX, float gridZ, Loader* loader,
-          TerrainTexturePack* texturePack, TerrainTexture* blendMap,
-          std::string heightMapFilename);
-  RawModel* generateTerrain(Loader* loader, std::string heightMap);
-  float getTerrainHeightAt(float worldX, float worldZ);
+  Terrain(
+    float grid_x,
+    float grid_z,
+    Loader* loader,
+    TerrainTexturePack* texture_pack,
+    TerrainTexture* blend_map,
+    std::string height_map_filename
+  );
 
-  float getX() const { return this->x; }
-  float getZ() const { return this->z; }
-  RawModel* getModel() const { return this->model; }
-  TerrainTexturePack* getTexturePack() const { return this->texturePack; }
-  TerrainTexture* getBlendMap() const { return this->blendMap; }
+  RawModel* generate_terrain(Loader* loader, std::string height_map);
+  float get_terrain_height_at(float world_x, float world_z);
 
-  void setX(float value) { this->x = value; }
-  void setZ(float value) { this->z = value; }
+  float get_x() const { return this->x; }
+  float get_z() const { return this->z; }
+  RawModel* get_model() const { return this->model; }
+  TerrainTexturePack* get_texture_pack() const { return this->texture_pack; }
+  TerrainTexture* get_blend_map() const { return this->blend_map; }
+
+  void set_x(float value) { this->x = value; }
+  void set_z(float value) { this->z = value; }
   void setModel(RawModel* model) { this->model = model; }
 
 private:
@@ -33,15 +37,23 @@ private:
   float z;
 
   RawModel* model;
-  TerrainTexturePack* texturePack;
-  TerrainTexture* blendMap;
+  TerrainTexturePack* texture_pack;
+  TerrainTexture* blend_map;
+  std::vector<std::vector<float>> height_map;
 
-  std::vector<std::vector<float>> heightMap;
+  float get_height(
+    const int& x,
+    const int& z,
+    stbi_uc* image_data,
+    const int& image_width
+  );
 
-  float getHeight(const int& x, const int& z, stbi_uc* imageData,
-                  const int& imageWidth);
-  glm::vec3 calculateNormal(const int& x, const int& z, stbi_uc* imageData,
-                            const int& imageWidth);
+  glm::vec3 calculate_normal(
+    const int& x,
+    const int& z,
+    stbi_uc* image_data,
+    const int& image_width
+  );
 };
 
 #endif // !TERRAIN_H

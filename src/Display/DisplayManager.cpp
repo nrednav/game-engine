@@ -24,7 +24,7 @@ bool DisplayManager::create_display() {
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
   this->display =
-      glfwCreateWindow(DISPLAY_WIDTH, DISPLAY_HEIGHT, "ThinMatrix", NULL, NULL);
+    glfwCreateWindow(DISPLAY_WIDTH, DISPLAY_HEIGHT, "ThinMatrix", NULL, NULL);
 
   if (!this->display) {
     glfwTerminate();
@@ -56,12 +56,15 @@ void DisplayManager::update_display() {
   glfwSwapBuffers(display);
   glfwPollEvents();
 
-  double currentFrameTime = glfwGetTime();
-  this->delta_frame_time = currentFrameTime - this->last_frame_time;
-  this->last_frame_time = currentFrameTime;
+  double current_frame_time = glfwGetTime();
+
+  this->delta_frame_time = current_frame_time - this->last_frame_time;
+  this->last_frame_time = current_frame_time;
 }
 
-void DisplayManager::close_display() { glfwTerminate(); }
+void DisplayManager::close_display() {
+  glfwTerminate();
+}
 
 void DisplayManager::center_window(GLFWwindow* window, GLFWmonitor* monitor) {
   if (!monitor)
@@ -71,19 +74,27 @@ void DisplayManager::center_window(GLFWwindow* window, GLFWmonitor* monitor) {
   if (!mode)
     return;
 
-  int monitorX, monitorY;
-  glfwGetMonitorPos(monitor, &monitorX, &monitorY);
+  int monitor_x, monitor_y;
+  glfwGetMonitorPos(monitor, &monitor_x, &monitor_y);
 
-  int windowWidth, windowHeight;
-  glfwGetWindowSize(window, &windowWidth, &windowHeight);
+  int window_width, window_height;
+  glfwGetWindowSize(window, &window_width, &window_height);
 
-  glfwSetWindowPos(window, monitorX + (mode->width - windowWidth) / 2,
-                   monitorY + (mode->height - windowHeight) / 2);
+  glfwSetWindowPos(
+    window,
+    monitor_x + (mode->width - window_width) / 2,
+    monitor_y + (mode->height - window_height) / 2
+  );
 }
 
 // Callbacks
-void DisplayManager::key_pressed(GLFWwindow* window, int key, int scancode,
-                                 int action, int mods) {
+void DisplayManager::key_pressed(
+  GLFWwindow* window,
+  int key,
+  int scancode,
+  int action,
+  int mods
+) {
   if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
     glfwSetWindowShouldClose(window, GL_TRUE);
 }

@@ -6,10 +6,12 @@
 
 #include <iostream>
 
-RawModel* Loader::load_to_vao(std::vector<float>& positions,
-                              std::vector<int>& indices,
-                              std::vector<float>& texture_coords,
-                              std::vector<float>& normals) {
+RawModel* Loader::load_to_vao(
+  std::vector<float>& positions,
+  std::vector<int>& indices,
+  std::vector<float>& texture_coords,
+  std::vector<float>& normals
+) {
   unsigned int vao_id = create_vao();
 
   bind_indices_buffer(indices);
@@ -43,9 +45,11 @@ unsigned int Loader::create_vao() {
   return vao_id;
 }
 
-void Loader::store_data_in_attribute_list(int attribute_number,
-                                          int component_count,
-                                          std::vector<float>& data) {
+void Loader::store_data_in_attribute_list(
+  int attribute_number,
+  int component_count,
+  std::vector<float>& data
+) {
   unsigned int vbo_id;
 
   glGenBuffers(1, &vbo_id);
@@ -53,10 +57,20 @@ void Loader::store_data_in_attribute_list(int attribute_number,
   vbo_list.push_back(vbo_id);
 
   glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
-  glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(float), &data[0],
-               GL_STATIC_DRAW);
-  glVertexAttribPointer(attribute_number, component_count, GL_FLOAT, false, 0,
-                        0);
+  glBufferData(
+    GL_ARRAY_BUFFER,
+    data.size() * sizeof(float),
+    &data[0],
+    GL_STATIC_DRAW
+  );
+  glVertexAttribPointer(
+    attribute_number,
+    component_count,
+    GL_FLOAT,
+    false,
+    0,
+    0
+  );
   glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
@@ -68,8 +82,12 @@ void Loader::bind_indices_buffer(std::vector<int>& indices) {
   vbo_list.push_back(vbo_id);
 
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo_id);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(int),
-               &indices[0], GL_STATIC_DRAW);
+  glBufferData(
+    GL_ELEMENT_ARRAY_BUFFER,
+    indices.size() * sizeof(int),
+    &indices[0],
+    GL_STATIC_DRAW
+  );
 }
 
 int Loader::load_texture(std::string filename, bool repeat) {
@@ -77,7 +95,7 @@ int Loader::load_texture(std::string filename, bool repeat) {
   int width, height, component_count;
   std::string filepath = "assets/textures/" + filename + ".png";
   stbi_uc* image_data =
-      stbi_load(filepath.c_str(), &width, &height, &component_count, 4);
+    stbi_load(filepath.c_str(), &width, &height, &component_count, 4);
 
   if (image_data == nullptr) {
     std::cout << "Failed to load texture: " << filename << std::endl;
@@ -95,11 +113,23 @@ int Loader::load_texture(std::string filename, bool repeat) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
   }
 
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA,
-               GL_UNSIGNED_BYTE, image_data);
+  glTexImage2D(
+    GL_TEXTURE_2D,
+    0,
+    GL_RGBA,
+    width,
+    height,
+    0,
+    GL_RGBA,
+    GL_UNSIGNED_BYTE,
+    image_data
+  );
   glGenerateMipmap(GL_TEXTURE_2D);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-                  GL_LINEAR_MIPMAP_LINEAR);
+  glTexParameteri(
+    GL_TEXTURE_2D,
+    GL_TEXTURE_MIN_FILTER,
+    GL_LINEAR_MIPMAP_LINEAR
+  );
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, -0.5f);
 
   glBindTexture(GL_TEXTURE_2D, 0);
@@ -120,11 +150,19 @@ int Loader::load_cube_map(std::vector<std::string>& texture_files) {
   for (int i = 0; i < texture_files.size(); i++) {
     TextureData* data = this->decode_texture_file(texture_files[i]);
 
-    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA,
-                 data->getWidth(), data->getHeight(), 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, data->getBuffer());
+    glTexImage2D(
+      GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
+      0,
+      GL_RGBA,
+      data->get_width(),
+      data->get_height(),
+      0,
+      GL_RGBA,
+      GL_UNSIGNED_BYTE,
+      data->get_buffer()
+    );
 
-    stbi_image_free(data->getBuffer());
+    stbi_image_free(data->get_buffer());
   }
 
   glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -144,13 +182,20 @@ TextureData* Loader::decode_texture_file(std::string filename) {
   int width, height, component_count;
 
   std::string filepath = "assets/textures/" + filename + ".png";
-  stbi_uc* image_data = stbi_load(filepath.c_str(), &width, &height,
-                                  &component_count, STBI_rgb_alpha);
+  stbi_uc* image_data = stbi_load(
+    filepath.c_str(),
+    &width,
+    &height,
+    &component_count,
+    STBI_rgb_alpha
+  );
 
   return new TextureData(image_data, width, height);
 }
 
-void Loader::unbind_vao() { glBindVertexArray(0); }
+void Loader::unbind_vao() {
+  glBindVertexArray(0);
+}
 
 void Loader::cleanup() {
   for (unsigned int vao_id : vao_list)

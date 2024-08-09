@@ -16,59 +16,64 @@ int main() {
   Loader* loader = new Loader();
   MasterRenderer* renderer = new MasterRenderer(loader);
 
-  TerrainTexture* bgTexture =
-      new TerrainTexture(loader->load_texture("grassTerrain2", true));
-  TerrainTexture* rTexture =
-      new TerrainTexture(loader->load_texture("mudTerrain", true));
-  TerrainTexture* gTexture =
-      new TerrainTexture(loader->load_texture("grassFlowersTerrain", true));
-  TerrainTexture* bTexture =
-      new TerrainTexture(loader->load_texture("pathTerrain", true));
-  TerrainTexture* blendMap =
-      new TerrainTexture(loader->load_texture("blendMap", true));
+  TerrainTexture* bg_texture =
+    new TerrainTexture(loader->load_texture("terrain/grass/2", true));
+  TerrainTexture* r_texture =
+    new TerrainTexture(loader->load_texture("terrain/mud", true));
+  TerrainTexture* g_texture =
+    new TerrainTexture(loader->load_texture("terrain/grass/flowers", true));
+  TerrainTexture* b_texture =
+    new TerrainTexture(loader->load_texture("terrain/path", true));
+  TerrainTexture* blend_map =
+    new TerrainTexture(loader->load_texture("blend_map", true));
 
-  TerrainTexturePack* texturePack =
-      new TerrainTexturePack(bgTexture, rTexture, gTexture, bTexture);
+  TerrainTexturePack* texture_pack =
+    new TerrainTexturePack(bg_texture, r_texture, g_texture, b_texture);
 
   std::vector<std::vector<Terrain*>> terrains(2, std::vector<Terrain*>(2));
   terrains[0][0] =
-      new Terrain(0, 0, loader, texturePack, blendMap, "heightmap");
+    new Terrain(0, 0, loader, texture_pack, blend_map, "height_map");
   terrains[0][1] =
-      new Terrain(0, 1, loader, texturePack, blendMap, "heightmap");
+    new Terrain(0, 1, loader, texture_pack, blend_map, "height_map");
   terrains[1][0] =
-      new Terrain(1, 0, loader, texturePack, blendMap, "heightmap");
+    new Terrain(1, 0, loader, texture_pack, blend_map, "height_map");
   terrains[1][1] =
-      new Terrain(1, 1, loader, texturePack, blendMap, "heightmap");
+    new Terrain(1, 1, loader, texture_pack, blend_map, "height_map");
 
-  EntityManager* entityManager = EntityManager::get_instance();
-  entityManager->initialize(loader, terrains[0][0]);
-  entityManager->generate_entities(ENTITY_COUNT);
+  EntityManager* entity_manager = EntityManager::get_instance();
+  entity_manager->initialize(loader, terrains[0][0]);
+  entity_manager->generate_entities(ENTITY_COUNT);
 
-  Player* player = entityManager->create_player("player", 1.0f);
+  Player* player = entity_manager->create_player("player", 1.0f);
   Camera* camera = new Camera(player, glm::vec3(0, 5, 0));
 
-  int previousGridX = 0, previousGridZ = 0;
+  int previous_grid_x = 0, previous_grid_z = 0;
 
   while (!glfwWindowShouldClose(display)) {
-    int gridX = (int)(player->get_position().x / TERRAIN_SIZE + 1);
-    int gridZ = (int)(player->get_position().z / TERRAIN_SIZE + 1);
+    int grid_x = (int)(player->get_position().x / TERRAIN_SIZE + 1);
+    int grid_z = (int)(player->get_position().z / TERRAIN_SIZE + 1);
 
-    if (gridX != previousGridX || gridZ != previousGridZ) {
-      previousGridX = gridX;
-      previousGridZ = gridZ;
-      entityManager->recalculate_entity_positions(terrains[gridX][gridZ]);
+    if (grid_x != previous_grid_x || grid_z != previous_grid_z) {
+      previous_grid_x = grid_x;
+      previous_grid_z = grid_z;
+      entity_manager->recalculate_entity_positions(terrains[grid_x][grid_z]);
     }
 
-    player->move(terrains[gridX][gridZ]);
+    player->move(terrains[grid_x][grid_z]);
     camera->move();
 
-    renderer->renderScene(entityManager->get_entities(), terrains,
-                          entityManager->get_lights(), player, camera);
+    renderer->render_scene(
+      entity_manager->get_entities(),
+      terrains,
+      entity_manager->get_lights(),
+      player,
+      camera
+    );
 
     DisplayManager::get_instance()->update_display();
   }
 
-  entityManager->cleanup();
+  entity_manager->cleanup();
   renderer->cleanup();
   loader->cleanup();
   DisplayManager::get_instance()->close_display();

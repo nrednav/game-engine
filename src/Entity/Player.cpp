@@ -4,8 +4,12 @@
 #include "Constants.h"
 #include "math.h"
 
-Player::Player(TexturedModel* model, glm::vec3 position, glm::vec3 rotation,
-               glm::vec3 scale)
+Player::Player(
+  TexturedModel* model,
+  glm::vec3 position,
+  glm::vec3 rotation,
+  glm::vec3 scale
+)
     : Entity(model, position, rotation, scale) {}
 
 void Player::move(Terrain* terrain) {
@@ -16,13 +20,14 @@ void Player::move(Terrain* terrain) {
   }
 
   float frame_time_seconds =
-      (float)DisplayManager::get_instance()->get_frame_time_seconds();
+    (float)DisplayManager::get_instance()->get_frame_time_seconds();
 
   glm::vec3 last_safe_position = this->get_position();
 
   // Horizontal Movement
   this->change_rotation(
-      glm::vec3(0, this->current_turn_speed * frame_time_seconds, 0));
+    glm::vec3(0, this->current_turn_speed * frame_time_seconds, 0)
+  );
   float distance = this->current_speed * frame_time_seconds;
   float dx = distance * glm::sin(glm::radians(this->get_rotation().y));
   float dz = distance * glm::cos(glm::radians(this->get_rotation().y));
@@ -41,16 +46,20 @@ void Player::move(Terrain* terrain) {
   // Vertical Movement (E.g. jump)
   this->vertical_speed += PLAYER_GRAVITY * frame_time_seconds;
   this->change_position(
-      glm::vec3(0, this->vertical_speed * frame_time_seconds, 0));
+    glm::vec3(0, this->vertical_speed * frame_time_seconds, 0)
+  );
 
-  float terrain_height = terrain->getTerrainHeightAt(this->get_position().x,
-                                                     this->get_position().z);
+  float terrain_height = terrain->get_terrain_height_at(
+    this->get_position().x,
+    this->get_position().z
+  );
 
   if (this->get_position().y < terrain_height) {
     this->vertical_speed = 0;
     this->is_airborne = false;
-    this->set_position(glm::vec3(this->get_position().x, terrain_height,
-                                 this->get_position().z));
+    this->set_position(
+      glm::vec3(this->get_position().x, terrain_height, this->get_position().z)
+    );
   }
 }
 

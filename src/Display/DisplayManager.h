@@ -27,8 +27,8 @@ private:
   void center_window(GLFWwindow* window, GLFWmonitor* monitor);
 
   // Callbacks
-  static void key_pressed(GLFWwindow* window, int key, int scancode, int action,
-                          int mods);
+  static void
+  key_pressed(GLFWwindow* window, int key, int scancode, int action, int mods);
 };
 
 #endif // !DISPLAYMANAGER_H

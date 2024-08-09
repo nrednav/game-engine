@@ -6,8 +6,12 @@
 
 class Player : public Entity {
 public:
-  Player(TexturedModel* model, glm::vec3 position, glm::vec3 rotation,
-         glm::vec3 scale);
+  Player(
+    TexturedModel* model,
+    glm::vec3 position,
+    glm::vec3 rotation,
+    glm::vec3 scale
+  );
   void move(Terrain* terrain);
   void jump();
 

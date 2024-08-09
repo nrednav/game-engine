@@ -5,11 +5,11 @@
 
 class RNG {
 public:
-  static float randomFloat() {
+  static float random_float() {
     return static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
   }
 
-  static int randomInt(int max) { return rand() % max; }
+  static int random_int(int max) { return rand() % max; }
 };
 
 #endif // !RNG_H

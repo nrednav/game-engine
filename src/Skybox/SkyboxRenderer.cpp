@@ -4,46 +4,49 @@
 
 #include "glm/gtc/constants.hpp"
 
-SkyboxRenderer::SkyboxRenderer(SkyboxShader* shader, Loader* loader,
-                               glm::mat4 projectionMatrix) {
+SkyboxRenderer::SkyboxRenderer(
+  SkyboxShader* shader,
+  Loader* loader,
+  glm::mat4 projection_matrix
+) {
   this->cube = loader->load_to_vao(this->vertices, 3);
-  this->dayTextureID = loader->load_cube_map(this->dayTextureFiles);
-  this->nightTextureID = loader->load_cube_map(this->nightTextureFiles);
+  this->day_texture_id = loader->load_cube_map(this->day_texture_files);
+  this->night_texture_id = loader->load_cube_map(this->night_texture_files);
   this->shader = shader;
 
   this->shader->start();
-  this->shader->connectTextureUnits();
-  this->shader->loadProjectionMatrix(projectionMatrix);
+  this->shader->connect_texture_units();
+  this->shader->load_projection_matrix(projection_matrix);
   this->shader->stop();
 }
 
 void SkyboxRenderer::render(Camera* camera, glm::vec3 color) {
   this->shader->start();
-  this->shader->loadViewMatrix(camera);
-  this->shader->loadFogColor(color);
+  this->shader->load_view_matrix(camera);
+  this->shader->load_fog_color(color);
 
-  glBindVertexArray(this->cube->getVaoID());
+  glBindVertexArray(this->cube->get_vao_id());
   glEnableVertexAttribArray(0);
 
-  this->bindTextures();
-  glDrawArrays(GL_TRIANGLES, 0, this->cube->getVertexCount());
+  this->bind_textures();
+  glDrawArrays(GL_TRIANGLES, 0, this->cube->get_vertex_count());
 
   glDisableVertexAttribArray(0);
   glBindVertexArray(0);
   this->shader->stop();
 }
 
-void SkyboxRenderer::bindTextures() {
+void SkyboxRenderer::bind_textures() {
   glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_CUBE_MAP, this->dayTextureID);
+  glBindTexture(GL_TEXTURE_CUBE_MAP, this->day_texture_id);
 
   glActiveTexture(GL_TEXTURE1);
-  glBindTexture(GL_TEXTURE_CUBE_MAP, this->nightTextureID);
+  glBindTexture(GL_TEXTURE_CUBE_MAP, this->night_texture_id);
 
-  this->shader->loadBlendFactor(this->getBlendFactor());
+  this->shader->load_blend_factor(this->get_blend_factor());
 }
 
-float SkyboxRenderer::getBlendFactor() {
+float SkyboxRenderer::get_blend_factor() {
   this->time += (float)DisplayManager::get_instance()->get_frame_time_seconds();
   float delta = -1 * this->time * 2 * glm::pi<float>() / SKYBOX_CYCLE_LENGTH;
 
