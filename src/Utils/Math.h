@@ -6,14 +6,20 @@
 
 class Math {
 public:
-  static glm::mat4 createTransformationMatrix(glm::vec3 translation,
-                                              glm::vec3 rotation,
-                                              glm::vec3 scale);
+  static glm::mat4 create_transformation_matrix(
+    glm::vec3 translation,
+    glm::vec3 rotation,
+    glm::vec3 scale
+  );
 
-  static glm::mat4 createViewMatrix(Camera* camera);
+  static glm::mat4 create_view_matrix(Camera* camera);
 
-  static float getBarryCentricCoordinate(glm::vec3 p1, glm::vec3 p2,
-                                         glm::vec3 p3, glm::vec2 objectPos);
+  static float get_barry_centric_coordinate(
+    glm::vec3 p1,
+    glm::vec3 p2,
+    glm::vec3 p3,
+    glm::vec2 object_pos
+  );
 };
 
 #endif // !MATH_H

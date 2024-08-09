@@ -5,12 +5,12 @@
 
 class TextureData {
 public:
-  TextureData(stbi_uc* imageData, int width, int height)
-      : width(width), height(height), buffer(imageData) {}
+  TextureData(stbi_uc* image_data, int width, int height)
+      : width(width), height(height), buffer(image_data) {}
 
-  int getWidth() const { return this->width; }
-  int getHeight() const { return this->height; }
-  stbi_uc* getBuffer() const { return this->buffer; }
+  int get_width() const { return this->width; }
+  int get_height() const { return this->height; }
+  stbi_uc* get_buffer() const { return this->buffer; }
 
 private:
   int width;

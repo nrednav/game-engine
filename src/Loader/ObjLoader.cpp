@@ -66,8 +66,14 @@ RawModel* ObjLoader::load_model(std::string filename, Loader* loader) {
         normals_array.resize(vertices.size());
       }
 
-      process_vertices(token, indices, textures, textures_array, normals,
-                       normals_array);
+      process_vertices(
+        token,
+        indices,
+        textures,
+        textures_array,
+        normals,
+        normals_array
+      );
     }
   }
 
@@ -76,11 +82,14 @@ RawModel* ObjLoader::load_model(std::string filename, Loader* loader) {
   return loader->load_to_vao(vertices, indices, textures_array, normals_array);
 }
 
-void ObjLoader::process_vertices(char* vertex_data, std::vector<int>& indices,
-                                 std::vector<glm::vec2>& textures,
-                                 std::vector<float>& textures_array,
-                                 std::vector<glm::vec3>& normals,
-                                 std::vector<float>& normals_array) {
+void ObjLoader::process_vertices(
+  char* vertex_data,
+  std::vector<int>& indices,
+  std::vector<glm::vec2>& textures,
+  std::vector<float>& textures_array,
+  std::vector<glm::vec3>& normals,
+  std::vector<float>& normals_array
+) {
   char* stop;
   int vertex_pointer;
 

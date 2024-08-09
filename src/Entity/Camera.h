@@ -35,8 +35,10 @@ private:
 
   float calculate_horizontal_distance();
   float calculate_vertical_distance();
-  void calculate_camera_position(const float& horizontal_distance,
-                                 const float& vertical_distance);
+  void calculate_camera_position(
+    const float& horizontal_distance,
+    const float& vertical_distance
+  );
 };
 
 #endif // !CAMERA_H

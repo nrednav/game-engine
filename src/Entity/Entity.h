@@ -7,12 +7,21 @@
 
 class Entity {
 public:
-  Entity(TexturedModel* model, glm::vec3 position, glm::vec3 rotation,
-         glm::vec3 scale)
+  Entity(
+    TexturedModel* model,
+    glm::vec3 position,
+    glm::vec3 rotation,
+    glm::vec3 scale
+  )
       : model(model), position(position), rotation(rotation), scale(scale) {}
 
-  Entity(TexturedModel* model, glm::vec3 position, glm::vec3 rotation,
-         glm::vec3 scale, int texture_index)
+  Entity(
+    TexturedModel* model,
+    glm::vec3 position,
+    glm::vec3 rotation,
+    glm::vec3 scale,
+    int texture_index
+  )
       : model(model), position(position), rotation(rotation), scale(scale),
         texture_index(texture_index) {}
 
@@ -31,14 +40,14 @@ public:
   void change_scale(glm::vec3 delta) { this->scale += delta; }
 
   float get_texture_x_offset() {
-    int row_count = this->model->getTexture()->getNumberOfRows();
+    int row_count = this->model->get_texture()->get_row_count();
     int column = this->texture_index % row_count;
 
     return (float)column / (float)row_count;
   }
 
   float get_texture_y_offset() {
-    int row_count = this->model->getTexture()->getNumberOfRows();
+    int row_count = this->model->get_texture()->get_row_count();
     int row = this->texture_index / row_count;
 
     return (float)row / (float)row_count;

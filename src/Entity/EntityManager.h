@@ -38,11 +38,14 @@ private:
   std::vector<Light*> lights;
 
   void create_entity(std::string name, float scale, bool duplicate = true);
-  TexturedModel* create_textured_model(std::string name, Loader* loader,
-                                       bool has_transparency = false,
-                                       bool uses_fake_lighting = false,
-                                       bool uses_texture_atlas = false,
-                                       int atlas_row_count = 1);
+  TexturedModel* create_textured_model(
+    std::string name,
+    Loader* loader,
+    bool has_transparency = false,
+    bool uses_fake_lighting = false,
+    bool uses_texture_atlas = false,
+    int atlas_row_count = 1
+  );
   void create_lights();
 };
 

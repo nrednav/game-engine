@@ -18,35 +18,38 @@ class MasterRenderer {
 public:
   MasterRenderer(Loader* loader);
   void render(std::vector<Light*> lights, Camera* camera);
-  void renderScene(const std::vector<Entity*>& entities,
-                   std::vector<std::vector<Terrain*>>& terrains,
-                   const std::vector<Light*>& lights, Player* player,
-                   Camera* camera);
+  void render_scene(
+    const std::vector<Entity*>& entities,
+    std::vector<std::vector<Terrain*>>& terrains,
+    const std::vector<Light*>& lights,
+    Player* player,
+    Camera* camera
+  );
   void prepare();
-  void processEntity(Entity* entity);
-  void processTerrain(Terrain* terrain);
-  void createProjectionMatrix();
+  void process_entity(Entity* entity);
+  void process_terrain(Terrain* terrain);
+  void create_projection_matrix();
   void cleanup();
 
-  static void enableCulling();
-  static void disableCulling();
+  static void enable_culling();
+  static void disable_culling();
 
 private:
-  StaticShader* entityShader;
-  EntityRenderer* entityRenderer;
+  StaticShader* entity_shader;
+  EntityRenderer* entity_renderer;
 
-  TerrainShader* terrainShader;
-  TerrainRenderer* terrainRenderer;
+  TerrainShader* terrain_shader;
+  TerrainRenderer* terrain_renderer;
 
-  SkyboxShader* skyboxShader;
-  SkyboxRenderer* skyboxRenderer;
+  SkyboxShader* skybox_shader;
+  SkyboxRenderer* skybox_renderer;
 
-  glm::mat4 projectionMatrix;
+  glm::mat4 projection_matrix;
   std::map<TexturedModel*, std::vector<Entity*>> entities;
   std::vector<Terrain*> terrains;
 
-  int previousTerrainGridX = 0;
-  int previousTerrainGridZ = 0;
+  int previous_terrain_grid_x = 0;
+  int previous_terrain_grid_z = 0;
 };
 
 #endif // !MASTERRENDERER_H
