@@ -18,3 +18,20 @@ AllowShortIfStatementsOnASingleLine: Never
 AllowShortLambdasOnASingleLine: Inline
 AllowShortLoopsOnASingleLine: false
 AllowShortBlocksOnASingleLine: Empty
+BraceWrapping:
+  AfterCaseLabel: false
+  AfterClass: false
+  AfterEnum: false
+  AfterFunction: false
+  AfterNamespace: false
+  AfterStruct: false
+  AfterUnion: false
+  AfterExternBlock: false
+  BeforeCatch: true
+  BeforeElse: true
+  BeforeLambdaBody: false
+  BeforeWhile: true
+  IndentBraces: false
+  SplitEmptyFunction: false
+  SplitEmptyNamespace: false
+BreakBeforeBraces: Custom
