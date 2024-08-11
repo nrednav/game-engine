@@ -6,7 +6,7 @@
 class DisplayManager {
 public:
   static DisplayManager* get_instance();
-  bool create_display();
+  void create_display();
   void update_display();
   void close_display();
 

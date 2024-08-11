@@ -12,6 +12,7 @@
 #include "Model/TexturedModel.h"
 
 #include <map>
+#include <memory>
 #include <vector>
 
 class MasterRenderer {
@@ -20,7 +21,7 @@ public:
   void render(std::vector<Light*> lights, Camera* camera);
   void render_scene(
     const std::vector<Entity*>& entities,
-    std::vector<std::vector<Terrain*>>& terrains,
+    std::vector<std::vector<std::unique_ptr<Terrain>>>& terrains,
     const std::vector<Light*>& lights,
     Player* player,
     Camera* camera

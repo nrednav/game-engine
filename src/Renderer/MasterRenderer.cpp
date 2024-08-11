@@ -1,6 +1,8 @@
 #include "GL/glew.h"
 #include "MasterRenderer.h"
 #include "Constants.h"
+#include "Terrain/Terrain.h"
+#include <memory>
 
 MasterRenderer::MasterRenderer(Loader* loader) {
   this->enable_culling();
@@ -68,7 +70,7 @@ void MasterRenderer::render(std::vector<Light*> lights, Camera* camera) {
 
 void MasterRenderer::render_scene(
   const std::vector<Entity*>& entities,
-  std::vector<std::vector<Terrain*>>& terrains,
+  std::vector<std::vector<std::unique_ptr<Terrain>>>& terrains,
   const std::vector<Light*>& lights,
   Player* player,
   Camera* camera
@@ -77,7 +79,7 @@ void MasterRenderer::render_scene(
 
   for (int row = 0; row < terrains.size(); row++) {
     for (int col = 0; col < terrains[row].size(); col++) {
-      this->process_terrain(terrains[row][col]);
+      this->process_terrain(terrains[row][col].get());
     }
   }
 
@@ -94,7 +96,8 @@ void MasterRenderer::process_entity(Entity* entity) {
 
   if (batch.size() > 0) {
     this->entities[model].push_back(entity);
-  } else {
+  }
+  else {
     std::vector<Entity*> newBatch;
     newBatch.push_back(entity);
     this->entities[model] = newBatch;

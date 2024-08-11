@@ -3,6 +3,7 @@
 #include "Constants.h"
 
 #include <iostream>
+#include <stdexcept>
 
 DisplayManager* DisplayManager::instance = nullptr;
 
@@ -10,28 +11,31 @@ DisplayManager* DisplayManager::get_instance() {
   return instance = (instance != nullptr) ? instance : new DisplayManager();
 }
 
-bool DisplayManager::create_display() {
-  // Initialize GLFW
+void DisplayManager::create_display() {
   if (!glfwInit()) {
-    std::cout << "Failed to initialize GLFW..." << std::endl;
-    return false;
+    throw std::runtime_error{
+      "DisplayManager/create_display: Failed to initialize GLFW"
+    };
   }
 
-  std::cout << "GLFW initialized successfully..." << std::endl;
+  std::cout << "GLFW initialized." << std::endl;
 
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
   this->display =
-    glfwCreateWindow(DISPLAY_WIDTH, DISPLAY_HEIGHT, "ThinMatrix", NULL, NULL);
+    glfwCreateWindow(DISPLAY_WIDTH, DISPLAY_HEIGHT, "Game Engine", NULL, NULL);
 
   if (!this->display) {
     glfwTerminate();
-    return false;
+
+    throw std::runtime_error{
+      "DisplayManager/create_display: Failed to create window with GLFW"
+    };
   }
 
-  std::cout << "Created display..." << std::endl;
+  std::cout << "Display created." << std::endl;
 
   glfwMakeContextCurrent(this->display);
   this->center_window(display, glfwGetPrimaryMonitor());
@@ -42,14 +46,13 @@ bool DisplayManager::create_display() {
   glfwSetInputMode(this->display, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
   this->last_frame_time = glfwGetTime();
 
-  // Load GLEW
   if (glewInit() != GLEW_OK) {
-    std::cout << "Failed to initialze GLEW..." << std::endl;
-    return false;
+    throw std::runtime_error{
+      "DisplayManager/create_display: Failed to initialize GLEW"
+    };
   }
-  std::cout << "GLEW initialized successfully..." << std::endl;
 
-  return true;
+  std::cout << "GLEW initialized." << std::endl;
 }
 
 void DisplayManager::update_display() {
@@ -67,17 +70,24 @@ void DisplayManager::close_display() {
 }
 
 void DisplayManager::center_window(GLFWwindow* window, GLFWmonitor* monitor) {
-  if (!monitor)
+  if (!monitor) {
     return;
+  }
 
   const GLFWvidmode* mode = glfwGetVideoMode(monitor);
-  if (!mode)
-    return;
 
-  int monitor_x, monitor_y;
+  if (!mode) {
+    return;
+  }
+
+  int monitor_x;
+  int monitor_y;
+
   glfwGetMonitorPos(monitor, &monitor_x, &monitor_y);
 
-  int window_width, window_height;
+  int window_width;
+  int window_height;
+
   glfwGetWindowSize(window, &window_width, &window_height);
 
   glfwSetWindowPos(
@@ -95,6 +105,7 @@ void DisplayManager::key_pressed(
   int action,
   int mods
 ) {
-  if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+  if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
     glfwSetWindowShouldClose(window, GL_TRUE);
+  }
 }
