@@ -39,7 +39,7 @@ git clone git@github.com:nrednav/game-engine.git
 ### Build
 
 ```
-make compile
+make build
 ```
 
 ### Run
