@@ -1,3 +1,6 @@
+#ifndef FLOOR_H
+#define FLOOR_H
+
 #include "Terrain/Terrain.h"
 #include "Texture/TerrainTexturePack.h"
 #include <memory>
@@ -21,3 +24,5 @@ private:
   TerrainGrid terrain_grid{};
   std::unique_ptr<TerrainTexturePack> terrain_texture_pack{};
 };
+
+#endif // !FLOOR_H
