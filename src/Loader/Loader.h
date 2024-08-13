@@ -9,7 +9,8 @@
 
 class Loader {
 public:
-  Loader() {}
+  Loader();
+  ~Loader();
 
   RawModel* load_to_vao(
     std::vector<float>& positions,
@@ -20,8 +21,6 @@ public:
   RawModel* load_to_vao(std::vector<float>& positions, int dimensions);
   int load_texture(std::string fileName, bool repeat = false);
   int load_cube_map(std::vector<std::string>& texture_files);
-
-  void cleanup();
 
 private:
   std::vector<unsigned int> vao_list;

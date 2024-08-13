@@ -15,7 +15,6 @@ public:
     float grid_z,
     Loader* loader,
     TerrainTexturePack* texture_pack,
-    TerrainTexture* blend_map,
     std::string height_map_filename
   );
 
@@ -26,7 +25,6 @@ public:
   float get_z() const { return this->z; }
   RawModel* get_model() const { return this->model; }
   TerrainTexturePack* get_texture_pack() const { return this->texture_pack; }
-  TerrainTexture* get_blend_map() const { return this->blend_map; }
 
   void set_x(float value) { this->x = value; }
   void set_z(float value) { this->z = value; }

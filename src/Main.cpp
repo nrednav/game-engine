@@ -1,5 +1,6 @@
 #include <cstdlib>
 #include <memory>
+#include <unordered_map>
 #include <vector>
 #include <iostream>
 
@@ -20,25 +21,16 @@ int main() {
     auto loader = std::make_unique<Loader>();
     auto renderer = std::make_unique<MasterRenderer>(loader.get());
 
-    auto bg_texture_id = loader->load_texture("terrain/grass/2", true);
-    auto r_texture_id = loader->load_texture("terrain/mud", true);
-    auto g_texture_id = loader->load_texture("terrain/grass/flowers", true);
-    auto b_texture_id = loader->load_texture("terrain/path", true);
-    auto blend_map_texture_id = loader->load_texture("blend_map", true);
+    std::unordered_map<std::string, TerrainTextureData> terrain_texture_map{
+      {"background", {.filename = "terrain/grass/2", .repeating = true}},
+      {"red", {.filename = "terrain/mud", .repeating = true}},
+      {"green", {.filename = "terrain/grass/flowers", .repeating = true}},
+      {"blue", {.filename = "terrain/path", .repeating = true}},
+      {"blend_map", {.filename = "blend_map", .repeating = true}}
+    };
 
-    auto bg_texture = std::make_unique<TerrainTexture>(bg_texture_id);
-    auto r_texture = std::make_unique<TerrainTexture>(r_texture_id);
-    auto g_texture = std::make_unique<TerrainTexture>(g_texture_id);
-    auto b_texture = std::make_unique<TerrainTexture>(b_texture_id);
-    auto blend_map_texture =
-      std::make_unique<TerrainTexture>(blend_map_texture_id);
-
-    auto terrain_texture_pack = std::make_unique<TerrainTexturePack>(
-      bg_texture.get(),
-      r_texture.get(),
-      g_texture.get(),
-      b_texture.get()
-    );
+    auto terrain_texture_pack =
+      std::make_unique<TerrainTexturePack>(terrain_texture_map, loader.get());
 
     std::vector<std::vector<std::unique_ptr<Terrain>>> terrains;
     terrains.resize(2);
@@ -51,7 +43,6 @@ int main() {
       0,
       loader.get(),
       terrain_texture_pack.get(),
-      blend_map_texture.get(),
       "height_map"
     );
 
@@ -60,7 +51,6 @@ int main() {
       1,
       loader.get(),
       terrain_texture_pack.get(),
-      blend_map_texture.get(),
       "height_map"
     );
 
@@ -69,7 +59,6 @@ int main() {
       0,
       loader.get(),
       terrain_texture_pack.get(),
-      blend_map_texture.get(),
       "height_map"
     );
 
@@ -78,7 +67,6 @@ int main() {
       1,
       loader.get(),
       terrain_texture_pack.get(),
-      blend_map_texture.get(),
       "height_map"
     );
 
@@ -120,7 +108,6 @@ int main() {
 
     entity_manager->cleanup();
     renderer->cleanup();
-    loader->cleanup();
     display_manager->close_display();
   }
   catch (const std::exception& exception) {

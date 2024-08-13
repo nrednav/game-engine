@@ -49,29 +49,20 @@ void TerrainRenderer::bind_textures(Terrain* terrain) {
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(
     GL_TEXTURE_2D,
-    texture_pack->get_background_texture()->get_texture_id()
+    texture_pack->get_background_texture()->get_id()
   );
 
   glActiveTexture(GL_TEXTURE1);
-  glBindTexture(
-    GL_TEXTURE_2D,
-    texture_pack->get_red_texture()->get_texture_id()
-  );
+  glBindTexture(GL_TEXTURE_2D, texture_pack->get_red_texture()->get_id());
 
   glActiveTexture(GL_TEXTURE2);
-  glBindTexture(
-    GL_TEXTURE_2D,
-    texture_pack->get_green_texture()->get_texture_id()
-  );
+  glBindTexture(GL_TEXTURE_2D, texture_pack->get_green_texture()->get_id());
 
   glActiveTexture(GL_TEXTURE3);
-  glBindTexture(
-    GL_TEXTURE_2D,
-    texture_pack->get_blue_texture()->get_texture_id()
-  );
+  glBindTexture(GL_TEXTURE_2D, texture_pack->get_blue_texture()->get_id());
 
   glActiveTexture(GL_TEXTURE4);
-  glBindTexture(GL_TEXTURE_2D, terrain->get_blend_map()->get_texture_id());
+  glBindTexture(GL_TEXTURE_2D, texture_pack->get_blend_map_texture()->get_id());
 }
 
 void TerrainRenderer::unbind_terrain_model() {

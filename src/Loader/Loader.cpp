@@ -6,6 +6,22 @@
 
 #include <iostream>
 
+Loader::Loader() {}
+
+Loader::~Loader() {
+  for (unsigned int vao_id : vao_list) {
+    glDeleteVertexArrays(1, &vao_id);
+  }
+
+  for (unsigned int vbo_id : vbo_list) {
+    glDeleteBuffers(1, &vbo_id);
+  }
+
+  for (unsigned int texture_id : textures) {
+    glDeleteTextures(1, &texture_id);
+  }
+}
+
 RawModel* Loader::load_to_vao(
   std::vector<float>& positions,
   std::vector<int>& indices,
@@ -195,15 +211,4 @@ TextureData* Loader::decode_texture_file(std::string filename) {
 
 void Loader::unbind_vao() {
   glBindVertexArray(0);
-}
-
-void Loader::cleanup() {
-  for (unsigned int vao_id : vao_list)
-    glDeleteVertexArrays(1, &vao_id);
-
-  for (unsigned int vbo_id : vbo_list)
-    glDeleteBuffers(1, &vbo_id);
-
-  for (unsigned int texture_id : textures)
-    glDeleteTextures(1, &texture_id);
 }

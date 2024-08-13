@@ -8,11 +8,9 @@ Terrain::Terrain(
   float grid_z,
   Loader* loader,
   TerrainTexturePack* texture_pack,
-  TerrainTexture* blend_map,
   std::string height_map_filename
 ) {
   this->texture_pack = texture_pack;
-  this->blend_map = blend_map;
   this->x = grid_x * TERRAIN_SIZE;
   this->z = grid_z * TERRAIN_SIZE;
   this->model = generate_terrain(loader, height_map_filename);
@@ -162,7 +160,8 @@ float Terrain::get_terrain_height_at(float world_x, float world_z) {
       glm::vec3(0, this->height_map[grid_x][grid_z + 1], 1),
       glm::vec2(x_coord, z_coord)
     );
-  } else {
+  }
+  else {
     terrain_height = Math::get_barry_centric_coordinate(
       glm::vec3(1, this->height_map[grid_x + 1][grid_z], 0),
       glm::vec3(1, this->height_map[grid_x + 1][grid_z + 1], 1),
