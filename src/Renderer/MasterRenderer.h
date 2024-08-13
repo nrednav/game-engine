@@ -3,6 +3,7 @@
 
 #include "Display/Display.h"
 #include "EntityRenderer.h"
+#include "Floor/Floor.h"
 #include "Shader/StaticShader.h"
 #include "Skybox/SkyboxRenderer.h"
 #include "TerrainRenderer.h"
@@ -21,14 +22,17 @@ public:
   MasterRenderer(Display* display, Loader* loader);
   ~MasterRenderer();
 
-  void render(std::vector<Light*> lights, Camera* camera);
+  void
+  render(const std::vector<std::unique_ptr<Light>>& lights, Camera* camera);
+
   void render_scene(
-    const std::vector<Entity*>& entities,
-    std::vector<std::vector<std::unique_ptr<Terrain>>>& terrains,
-    const std::vector<Light*>& lights,
+    const std::vector<std::unique_ptr<Entity>>& entities,
+    TerrainGrid& terrain_grid,
+    const std::vector<std::unique_ptr<Light>>& lights,
     Player* player,
     Camera* camera
   );
+
   void prepare();
   void process_entity(Entity* entity);
   void process_terrain(Terrain* terrain);

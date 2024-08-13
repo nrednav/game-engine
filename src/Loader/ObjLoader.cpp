@@ -2,7 +2,8 @@
 #include <cstring>
 #include <stdio.h>
 
-RawModel* ObjLoader::load_model(std::string filename, Loader* loader) {
+std::unique_ptr<RawModel>
+ObjLoader::load_model(std::string filename, Loader* loader) {
   // Open the file as read only
   FILE* file = fopen(("assets/models/" + filename + ".obj").c_str(), "r");
 

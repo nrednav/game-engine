@@ -61,7 +61,8 @@ void EntityManager::recalculate_entity_positions(Terrain* current_terrain) {
   }
 }
 
-Player* EntityManager::create_player(std::string name, float scale_factor) {
+std::unique_ptr<Player>
+EntityManager::create_player(std::string name, float scale_factor) {
   glm::vec3 position;
 
   position.x = RNG::random_float() * 800 - 400;
@@ -72,7 +73,12 @@ Player* EntityManager::create_player(std::string name, float scale_factor) {
   glm::vec3 rotation = glm::vec3(0, 0, 0);
   glm::vec3 scale = glm::vec3(scale_factor, scale_factor, scale_factor);
 
-  return new Player(this->models[name], position, rotation, scale);
+  return std::make_unique<Player>(
+    this->models[name].get(),
+    position,
+    rotation,
+    scale
+  );
 }
 
 void EntityManager::create_entity(
@@ -80,7 +86,7 @@ void EntityManager::create_entity(
   float scale_factor,
   bool duplicate
 ) {
-  TexturedModel* model = this->models[name];
+  TexturedModel* model = this->models[name].get();
 
   glm::vec3 position;
   position.x = RNG::random_float() * 800 - 400;
@@ -92,33 +98,39 @@ void EntityManager::create_entity(
   glm::vec3 scale = glm::vec3(scale_factor, scale_factor, scale_factor);
 
   if (model->get_texture()->get_row_count() > 1) {
-    this->entities.push_back(
-      new Entity(model, position, rotation, scale, RNG::random_int(4))
-    );
+    this->entities.push_back(std::make_unique<Entity>(
+      model,
+      position,
+      rotation,
+      scale,
+      RNG::random_int(4)
+    ));
   }
   else {
-    this->entities.push_back(new Entity(model, position, rotation, scale));
+    this->entities.push_back(
+      std::make_unique<Entity>(model, position, rotation, scale)
+    );
   }
 
   if (duplicate) {
-    Entity* lastEntity = this->entities[this->entities.size() - 1];
+    Entity* lastEntity = this->entities[this->entities.size() - 1].get();
 
     float x = -(lastEntity->get_position().x);
     float z = -(lastEntity->get_position().z);
     float y = this->active_terrain->get_terrain_height_at(x, z);
 
-    Entity* duplicate = new Entity(
+    auto duplicate = std::make_unique<Entity>(
       lastEntity->get_model(),
       glm::vec3(x, y, z),
       lastEntity->get_rotation(),
       lastEntity->get_scale()
     );
 
-    this->entities.push_back(duplicate);
+    this->entities.push_back(std::move(duplicate));
   }
 }
 
-TexturedModel* EntityManager::create_textured_model(
+std::unique_ptr<TexturedModel> EntityManager::create_textured_model(
   std::string name,
   Loader* loader,
   bool has_transparency,
@@ -127,16 +139,20 @@ TexturedModel* EntityManager::create_textured_model(
   int atlas_row_count
 ) {
 
-  RawModel* entity_raw_model = ObjLoader::load_model(name, loader);
-  ModelTexture* entity_texture =
-    new ModelTexture(loader->load_texture("assets/textures/" + name + ".png"));
+  auto entity_raw_model = ObjLoader::load_model(name, loader);
+
+  auto entity_texture = std::make_unique<ModelTexture>(
+    loader->load_texture("assets/textures/" + name + ".png")
+  );
 
   if (uses_texture_atlas) {
     entity_texture->set_row_count(atlas_row_count);
   }
 
-  TexturedModel* entity_textured_model =
-    new TexturedModel(entity_raw_model, entity_texture);
+  auto entity_textured_model = std::make_unique<TexturedModel>(
+    std::move(entity_raw_model),
+    std::move(entity_texture)
+  );
 
   if (has_transparency) {
     entity_textured_model->get_texture()->set_transparency(true);
@@ -150,18 +166,21 @@ TexturedModel* EntityManager::create_textured_model(
 }
 
 void EntityManager::create_lights() {
-  Light* sun = new Light(glm::vec3(0, 1000, 0), glm::vec3(1, 1, 1));
+  auto sun = std::make_unique<Light>(glm::vec3(0, 1000, 0), glm::vec3(1, 1, 1));
 
   this->create_entity("lamp", 1.0f, false);
 
-  Entity* lamp = this->entities[this->entities.size() - 1];
+  Entity* lamp = this->entities[this->entities.size() - 1].get();
 
-  glm::vec3 position = lamp->get_position();
-  position.y += 12.0f;
+  glm::vec3 lamp_position = lamp->get_position();
+  lamp_position.y += 12.0f;
 
-  glm::vec3 color = glm::vec3(2, 2, 0);
-  glm::vec3 attenuation = glm::vec3(1, 0.01f, 0.002f);
+  auto lamp_light = std::make_unique<Light>(
+    lamp_position,
+    glm::vec3(2, 2, 0),
+    glm::vec3(1, 0.01f, 0.002f)
+  );
 
-  this->lights.push_back(sun);
-  this->lights.push_back(new Light(position, color, attenuation));
+  this->lights.push_back(std::move(sun));
+  this->lights.push_back(std::move(lamp_light));
 }

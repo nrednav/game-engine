@@ -13,7 +13,7 @@ public:
   void load_transformation_matrix(glm::mat4 matrix);
   void load_projection_matrix(glm::mat4 matrix);
   void load_view_matrix(Camera* camera);
-  void load_lights(std::vector<Light*> lights);
+  void load_lights(const std::vector<std::unique_ptr<Light>>& lights);
   void load_specular_lighting_variables(float shineDamper, float reflectivity);
   void load_fake_lighting_variable(bool value);
   void load_sky_color(glm::vec3 rgb);

@@ -11,7 +11,9 @@
 class ObjLoader {
 public:
   ObjLoader() {}
-  static RawModel* load_model(std::string filename, Loader* loader);
+
+  static std::unique_ptr<RawModel>
+  load_model(std::string filename, Loader* loader);
 
 private:
   static void process_vertices(

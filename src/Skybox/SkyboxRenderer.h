@@ -65,7 +65,7 @@ private:
   int day_texture_id;
   int night_texture_id;
 
-  RawModel* cube;
+  std::unique_ptr<RawModel> cube;
   SkyboxShader* shader;
 
   float time = 0.0f;

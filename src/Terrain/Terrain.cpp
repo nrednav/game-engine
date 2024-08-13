@@ -16,7 +16,7 @@ Terrain::Terrain(
   this->model = generate_terrain(loader, height_map_filepath);
 }
 
-RawModel*
+std::unique_ptr<RawModel>
 Terrain::generate_terrain(Loader* loader, std::string height_map_filepath) {
   int image_width, image_height, component_count;
 

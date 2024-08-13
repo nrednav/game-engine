@@ -22,7 +22,7 @@ Loader::~Loader() {
   }
 }
 
-RawModel* Loader::load_to_vao(
+std::unique_ptr<RawModel> Loader::load_to_vao(
   std::vector<float>& positions,
   std::vector<int>& indices,
   std::vector<float>& texture_coords,
@@ -37,16 +37,20 @@ RawModel* Loader::load_to_vao(
 
   unbind_vao();
 
-  return new RawModel(vao_id, (unsigned int)indices.size());
+  return std::make_unique<RawModel>(vao_id, (unsigned int)indices.size());
 }
 
-RawModel* Loader::load_to_vao(std::vector<float>& positions, int dimensions) {
+std::unique_ptr<RawModel>
+Loader::load_to_vao(std::vector<float>& positions, int dimensions) {
   int vao_id = create_vao();
 
   store_data_in_attribute_list(0, dimensions, positions);
   unbind_vao();
 
-  return new RawModel(vao_id, ((unsigned int)positions.size()) / dimensions);
+  return std::make_unique<RawModel>(
+    vao_id,
+    ((unsigned int)positions.size()) / dimensions
+  );
 }
 
 unsigned int Loader::create_vao() {

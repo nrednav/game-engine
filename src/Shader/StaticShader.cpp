@@ -53,13 +53,15 @@ void StaticShader::load_view_matrix(Camera* camera) {
   load_matrix(this->location_view_matrix, view_matrix);
 }
 
-void StaticShader::load_lights(std::vector<Light*> lights) {
+void StaticShader::load_lights(const std::vector<std::unique_ptr<Light>>& lights
+) {
   for (int i = 0; i < MAX_LIGHT_COUNT; i++) {
     if (i < lights.size()) {
       load_vector(location_light_positions[i], lights[i]->get_position());
       load_vector(location_light_colors[i], lights[i]->get_color());
       load_vector(location_light_attenuations[i], lights[i]->get_attenuation());
-    } else {
+    }
+    else {
       load_vector(location_light_positions[i], glm::vec3(0, 0, 0));
       load_vector(location_light_colors[i], glm::vec3(0, 0, 0));
       load_vector(location_light_attenuations[i], glm::vec3(1, 0, 0));

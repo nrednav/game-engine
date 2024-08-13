@@ -28,7 +28,7 @@ int main() {
     entity_manager->generate_entities(ENTITY_COUNT);
 
     auto player = entity_manager->create_player("player", 1.0f);
-    auto camera = std::make_unique<Camera>(player, glm::vec3(0, 5, 0));
+    auto camera = std::make_unique<Camera>(player.get(), glm::vec3(0, 5, 0));
 
     int previous_grid_x = 0;
     int previous_grid_z = 0;
@@ -53,7 +53,7 @@ int main() {
         entity_manager->get_entities(),
         floor->get_terrain_grid(),
         entity_manager->get_lights(),
-        player,
+        player.get(),
         camera.get()
       );
 

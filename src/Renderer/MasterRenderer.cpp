@@ -2,7 +2,6 @@
 #include "MasterRenderer.h"
 #include "Constants.h"
 #include "Terrain/Terrain.h"
-#include "Floor/Floor.h"
 #include <memory>
 
 MasterRenderer::MasterRenderer(Display* display, Loader* loader) {
@@ -55,7 +54,10 @@ void MasterRenderer::prepare() {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void MasterRenderer::render(std::vector<Light*> lights, Camera* camera) {
+void MasterRenderer::render(
+  const std::vector<std::unique_ptr<Light>>& lights,
+  Camera* camera
+) {
   prepare();
 
   glm::vec3 sky_color = glm::vec3(SKY_COLOR_R, SKY_COLOR_G, SKY_COLOR_B);
@@ -84,9 +86,9 @@ void MasterRenderer::render(std::vector<Light*> lights, Camera* camera) {
 }
 
 void MasterRenderer::render_scene(
-  const std::vector<Entity*>& entities,
+  const std::vector<std::unique_ptr<Entity>>& entities,
   TerrainGrid& terrain_grid,
-  const std::vector<Light*>& lights,
+  const std::vector<std::unique_ptr<Light>>& lights,
   Player* player,
   Camera* camera
 ) {
@@ -98,8 +100,8 @@ void MasterRenderer::render_scene(
     }
   }
 
-  for (Entity* entity : entities) {
-    this->process_entity(entity);
+  for (const auto& entity : entities) {
+    this->process_entity(entity.get());
   }
 
   this->render(lights, camera);

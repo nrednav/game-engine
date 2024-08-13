@@ -18,23 +18,20 @@ public:
     std::string height_map_filepath
   );
 
-  RawModel* generate_terrain(Loader* loader, std::string height_map_filepath);
+  std::unique_ptr<RawModel>
+  generate_terrain(Loader* loader, std::string height_map_filepath);
   float get_terrain_height_at(float world_x, float world_z);
 
   float get_x() const { return this->x; }
   float get_z() const { return this->z; }
-  RawModel* get_model() const { return this->model; }
+  RawModel* get_model() const { return this->model.get(); }
   TerrainTexturePack* get_texture_pack() const { return this->texture_pack; }
-
-  void set_x(float value) { this->x = value; }
-  void set_z(float value) { this->z = value; }
-  void setModel(RawModel* model) { this->model = model; }
 
 private:
   float x;
   float z;
 
-  RawModel* model;
+  std::unique_ptr<RawModel> model;
   TerrainTexturePack* texture_pack;
   TerrainTexture* blend_map;
   std::vector<std::vector<float>> height_map;

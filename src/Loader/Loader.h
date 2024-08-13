@@ -4,6 +4,7 @@
 #include "Model/RawModel.h"
 #include "Texture/TextureData.h"
 
+#include <memory>
 #include <vector>
 #include <string>
 
@@ -12,13 +13,16 @@ public:
   Loader();
   ~Loader();
 
-  RawModel* load_to_vao(
+  std::unique_ptr<RawModel> load_to_vao(
     std::vector<float>& positions,
     std::vector<int>& indices,
     std::vector<float>& texture_coords,
     std::vector<float>& normals
   );
-  RawModel* load_to_vao(std::vector<float>& positions, int dimensions);
+
+  std::unique_ptr<RawModel>
+  load_to_vao(std::vector<float>& positions, int dimensions);
+
   int load_texture(std::string filepath, bool repeating = false);
   int load_cube_map(std::vector<std::string>& texture_files);
 

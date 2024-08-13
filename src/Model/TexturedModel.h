@@ -3,18 +3,24 @@
 
 #include "RawModel.h"
 #include "Texture/ModelTexture.h"
+#include <memory>
 
 class TexturedModel {
 public:
-  TexturedModel(RawModel* model, ModelTexture* texture)
-      : raw_model(model), texture(texture) {}
+  TexturedModel(
+    std::unique_ptr<RawModel> model,
+    std::unique_ptr<ModelTexture> texture
+  ) {
+    this->raw_model = std::move(model);
+    this->texture = std::move(texture);
+  }
 
-  RawModel* get_raw_model() const { return this->raw_model; }
-  ModelTexture* get_texture() const { return this->texture; }
+  RawModel* get_raw_model() const { return this->raw_model.get(); }
+  ModelTexture* get_texture() const { return this->texture.get(); }
 
 private:
-  RawModel* raw_model;
-  ModelTexture* texture;
+  std::unique_ptr<RawModel> raw_model;
+  std::unique_ptr<ModelTexture> texture;
 };
 
 #endif // !TEXTUREDMODEL_H
