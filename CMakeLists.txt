@@ -6,7 +6,7 @@ endif()
 
 project(
   game-engine
-  VERSION 1.0
+  VERSION 2.0
   DESCRIPTION "A C++ port of the OpenGL tutorials by ThinMatrix")
 
 set(CMAKE_CXX_STANDARD 20)
