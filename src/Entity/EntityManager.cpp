@@ -2,16 +2,17 @@
 #include "Loader/ObjLoader.h"
 #include "Utils/RNG.h"
 
-EntityManager* EntityManager::instance = nullptr;
-
-EntityManager* EntityManager::get_instance() {
-  return instance = (instance != nullptr) ? instance : new EntityManager();
-}
-
-void EntityManager::initialize(Loader* loader, Terrain* initial_terrain) {
+EntityManager::EntityManager(Loader* loader, Terrain* initial_terrain) {
   this->loader = loader;
   this->active_terrain = initial_terrain;
   this->load_entity_models();
+}
+
+EntityManager::~EntityManager() {
+  this->loader = nullptr;
+  this->active_terrain = nullptr;
+  this->entities.clear();
+  this->models.clear();
 }
 
 void EntityManager::generate_entities(int count) {
@@ -163,11 +164,4 @@ void EntityManager::create_lights() {
 
   this->lights.push_back(sun);
   this->lights.push_back(new Light(position, color, attenuation));
-}
-
-void EntityManager::cleanup() {
-  this->loader = nullptr;
-  this->active_terrain = nullptr;
-  this->entities.clear();
-  this->models.clear();
 }

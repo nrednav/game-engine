@@ -90,8 +90,8 @@ int main() {
       "assets/textures/height_map.png"
     );
 
-    auto entity_manager = EntityManager::get_instance();
-    entity_manager->initialize(loader.get(), terrains[0][0].get());
+    auto entity_manager =
+      std::make_unique<EntityManager>(loader.get(), terrains[0][0].get());
     entity_manager->generate_entities(ENTITY_COUNT);
 
     auto player = entity_manager->create_player("player", 1.0f);
@@ -126,7 +126,6 @@ int main() {
       display_manager->update_display();
     }
 
-    entity_manager->cleanup();
     display_manager->close_display();
   }
   catch (const std::exception& exception) {

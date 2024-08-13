@@ -12,8 +12,8 @@
 
 class EntityManager {
 public:
-  static EntityManager* get_instance();
-  void initialize(Loader* loader, Terrain* initial_terrain);
+  EntityManager(Loader* loader, Terrain* initial_terrain);
+  ~EntityManager();
 
   Player* create_player(std::string name, float scale_factor);
 
@@ -27,17 +27,15 @@ public:
   std::vector<Light*> get_lights() const { return this->lights; }
 
 private:
-  EntityManager() {}
-
-  static EntityManager* instance;
-
   Loader* loader;
   Terrain* active_terrain;
+
   std::vector<Entity*> entities;
   std::map<std::string, TexturedModel*> models;
   std::vector<Light*> lights;
 
   void create_entity(std::string name, float scale, bool duplicate = true);
+
   TexturedModel* create_textured_model(
     std::string name,
     Loader* loader,
@@ -46,6 +44,7 @@ private:
     bool uses_texture_atlas = false,
     int atlas_row_count = 1
   );
+
   void create_lights();
 };
 
