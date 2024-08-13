@@ -12,9 +12,10 @@
 
 int main() {
   try {
-    DisplayManager::get_instance()->create_display();
-
     auto display_manager = DisplayManager::get_instance();
+
+    display_manager->create_display();
+
     auto display = display_manager->get_display();
     auto loader = std::make_unique<Loader>();
     auto renderer = std::make_unique<MasterRenderer>(loader.get());
