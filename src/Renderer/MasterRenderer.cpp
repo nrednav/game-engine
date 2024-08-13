@@ -2,6 +2,7 @@
 #include "MasterRenderer.h"
 #include "Constants.h"
 #include "Terrain/Terrain.h"
+#include "Floor/Floor.h"
 #include <memory>
 
 MasterRenderer::MasterRenderer(Loader* loader) {
@@ -82,16 +83,16 @@ void MasterRenderer::render(std::vector<Light*> lights, Camera* camera) {
 
 void MasterRenderer::render_scene(
   const std::vector<Entity*>& entities,
-  std::vector<std::vector<std::unique_ptr<Terrain>>>& terrains,
+  TerrainGrid& terrain_grid,
   const std::vector<Light*>& lights,
   Player* player,
   Camera* camera
 ) {
   this->process_entity(player);
 
-  for (int row = 0; row < terrains.size(); row++) {
-    for (int col = 0; col < terrains[row].size(); col++) {
-      this->process_terrain(terrains[row][col].get());
+  for (int row = 0; row < terrain_grid.size(); row++) {
+    for (int col = 0; col < terrain_grid[row].size(); col++) {
+      this->process_terrain(terrain_grid[row][col].get());
     }
   }
 
