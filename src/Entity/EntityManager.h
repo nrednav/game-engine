@@ -21,7 +21,6 @@ public:
   void generate_entities(int count);
   void load_entity_models();
   void recalculate_entity_positions(Terrain* current_terrain);
-  void cleanup();
 
   // Getters
   const std::vector<std::unique_ptr<Entity>>& get_entities() const {
