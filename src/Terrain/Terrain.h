@@ -15,10 +15,10 @@ public:
     float grid_z,
     Loader* loader,
     TerrainTexturePack* texture_pack,
-    std::string height_map_filename
+    std::string height_map_filepath
   );
 
-  RawModel* generate_terrain(Loader* loader, std::string height_map);
+  RawModel* generate_terrain(Loader* loader, std::string height_map_filepath);
   float get_terrain_height_at(float world_x, float world_z);
 
   float get_x() const { return this->x; }

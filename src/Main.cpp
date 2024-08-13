@@ -46,7 +46,7 @@ int main() {
        {
          .filepath = "assets/textures/blend_map.png",
          .repeating = true,
-       }}
+       }},
     };
 
     auto terrain_texture_pack =
@@ -63,7 +63,7 @@ int main() {
       0,
       loader.get(),
       terrain_texture_pack.get(),
-      "height_map"
+      "assets/textures/height_map.png"
     );
 
     terrains[0][1] = std::make_unique<Terrain>(
@@ -71,7 +71,7 @@ int main() {
       1,
       loader.get(),
       terrain_texture_pack.get(),
-      "height_map"
+      "assets/textures/height_map.png"
     );
 
     terrains[1][0] = std::make_unique<Terrain>(
@@ -79,7 +79,7 @@ int main() {
       0,
       loader.get(),
       terrain_texture_pack.get(),
-      "height_map"
+      "assets/textures/height_map.png"
     );
 
     terrains[1][1] = std::make_unique<Terrain>(
@@ -87,7 +87,7 @@ int main() {
       1,
       loader.get(),
       terrain_texture_pack.get(),
-      "height_map"
+      "assets/textures/height_map.png"
     );
 
     auto entity_manager = EntityManager::get_instance();

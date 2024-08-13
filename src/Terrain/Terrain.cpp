@@ -8,20 +8,17 @@ Terrain::Terrain(
   float grid_z,
   Loader* loader,
   TerrainTexturePack* texture_pack,
-  std::string height_map_filename
+  std::string height_map_filepath
 ) {
   this->texture_pack = texture_pack;
   this->x = grid_x * TERRAIN_SIZE;
   this->z = grid_z * TERRAIN_SIZE;
-  this->model = generate_terrain(loader, height_map_filename);
+  this->model = generate_terrain(loader, height_map_filepath);
 }
 
 RawModel*
-Terrain::generate_terrain(Loader* loader, std::string height_map_filename) {
+Terrain::generate_terrain(Loader* loader, std::string height_map_filepath) {
   int image_width, image_height, component_count;
-
-  std::string height_map_filepath =
-    "assets/textures/" + height_map_filename + ".png";
 
   stbi_uc* image_data = stbi_load(
     height_map_filepath.c_str(),
