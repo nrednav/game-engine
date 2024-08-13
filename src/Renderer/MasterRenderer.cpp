@@ -7,31 +7,38 @@
 MasterRenderer::MasterRenderer(Loader* loader) {
   this->enable_culling();
 
-  this->entity_shader = new StaticShader(
+  this->entity_shader = std::make_unique<StaticShader>(
     "src/Shader/EntityVertexShader.txt",
     "src/Shader/EntityFragmentShader.txt"
   );
 
   this->create_projection_matrix();
 
-  this->entity_renderer =
-    new EntityRenderer(this->entity_shader, this->projection_matrix);
+  this->entity_renderer = std::make_unique<EntityRenderer>(
+    this->entity_shader.get(),
+    this->projection_matrix
+  );
 
-  this->terrain_shader = new TerrainShader(
+  this->terrain_shader = std::make_unique<TerrainShader>(
     "src/Shader/TerrainVertexShader.txt",
     "src/Shader/TerrainFragmentShader.txt"
   );
 
-  this->terrain_renderer =
-    new TerrainRenderer(this->terrain_shader, this->projection_matrix);
+  this->terrain_renderer = std::make_unique<TerrainRenderer>(
+    this->terrain_shader.get(),
+    this->projection_matrix
+  );
 
-  this->skybox_shader = new SkyboxShader(
+  this->skybox_shader = std::make_unique<SkyboxShader>(
     "src/Skybox/SkyboxVertexShader.txt",
     "src/Skybox/SkyboxFragmentShader.txt"
   );
 
-  this->skybox_renderer =
-    new SkyboxRenderer(this->skybox_shader, loader, this->projection_matrix);
+  this->skybox_renderer = std::make_unique<SkyboxRenderer>(
+    this->skybox_shader.get(),
+    loader,
+    this->projection_matrix
+  );
 }
 
 void MasterRenderer::prepare() {

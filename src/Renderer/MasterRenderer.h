@@ -36,14 +36,14 @@ public:
   static void disable_culling();
 
 private:
-  StaticShader* entity_shader;
-  EntityRenderer* entity_renderer;
+  std::unique_ptr<StaticShader> entity_shader;
+  std::unique_ptr<EntityRenderer> entity_renderer;
 
-  TerrainShader* terrain_shader;
-  TerrainRenderer* terrain_renderer;
+  std::unique_ptr<TerrainShader> terrain_shader;
+  std::unique_ptr<TerrainRenderer> terrain_renderer;
 
-  SkyboxShader* skybox_shader;
-  SkyboxRenderer* skybox_renderer;
+  std::unique_ptr<SkyboxShader> skybox_shader;
+  std::unique_ptr<SkyboxRenderer> skybox_renderer;
 
   glm::mat4 projection_matrix;
   std::map<TexturedModel*, std::vector<Entity*>> entities;
