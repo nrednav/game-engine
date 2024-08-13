@@ -1,7 +1,7 @@
 #include <cstdlib>
 #include <memory>
 #include <iostream>
-#include "Display/DisplayManager.h"
+#include "Display/Display.h"
 #include "Loader/Loader.h"
 #include "Renderer/MasterRenderer.h"
 #include "Entity/EntityManager.h"
@@ -10,13 +10,10 @@
 
 int main() {
   try {
-    auto display_manager = DisplayManager::get_instance();
-
-    display_manager->create_display();
-
-    auto display = display_manager->get_display();
+    auto display = std::make_unique<Display>();
     auto loader = std::make_unique<Loader>();
-    auto renderer = std::make_unique<MasterRenderer>(loader.get());
+    auto renderer =
+      std::make_unique<MasterRenderer>(display.get(), loader.get());
 
     auto floor = std::make_unique<Floor>(
       FloorDimensions{.length = 2, .width = 2},
@@ -36,7 +33,7 @@ int main() {
     int previous_grid_x = 0;
     int previous_grid_z = 0;
 
-    while (!glfwWindowShouldClose(display)) {
+    while (!glfwWindowShouldClose(display->get_window())) {
       int current_grid_x = (int)(player->get_position().x / TERRAIN_SIZE + 1);
       int current_grid_z = (int)(player->get_position().z / TERRAIN_SIZE + 1);
 
@@ -49,7 +46,7 @@ int main() {
         entity_manager->recalculate_entity_positions(current_terrain);
       }
 
-      player->move(current_terrain);
+      player->move(current_terrain, display->get_frame_time_seconds());
       camera->move();
 
       renderer->render_scene(
@@ -60,10 +57,8 @@ int main() {
         camera.get()
       );
 
-      display_manager->update_display();
+      display->update();
     }
-
-    display_manager->close_display();
   }
   catch (const std::exception& exception) {
     std::cerr << exception.what() << std::endl;

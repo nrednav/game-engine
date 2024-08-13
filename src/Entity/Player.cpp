@@ -1,6 +1,5 @@
 #include "Player.h"
 #include "GLFW/glfw3.h"
-#include "Display/DisplayManager.h"
 #include "Constants.h"
 #include "math.h"
 
@@ -12,15 +11,12 @@ Player::Player(
 )
     : Entity(model, position, rotation, scale) {}
 
-void Player::move(Terrain* terrain) {
+void Player::move(Terrain* terrain, double frame_time_seconds) {
   this->detect_input();
 
   if (glfwGetKey(glfwGetCurrentContext(), GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
     this->current_speed *= 5;
   }
-
-  float frame_time_seconds =
-    (float)DisplayManager::get_instance()->get_frame_time_seconds();
 
   glm::vec3 last_safe_position = this->get_position();
 
@@ -39,7 +35,8 @@ void Player::move(Terrain* terrain) {
 
   if (x_out_of_bounds || z_out_of_bounds) {
     this->set_position(last_safe_position);
-  } else {
+  }
+  else {
     this->change_position(glm::vec3(dx, 0, dz));
   }
 
@@ -73,17 +70,21 @@ void Player::jump() {
 void Player::detect_input() {
   if (glfwGetKey(glfwGetCurrentContext(), GLFW_KEY_W) == GLFW_PRESS) {
     this->current_speed = PLAYER_RUN_SPEED;
-  } else if (glfwGetKey(glfwGetCurrentContext(), GLFW_KEY_S) == GLFW_PRESS) {
+  }
+  else if (glfwGetKey(glfwGetCurrentContext(), GLFW_KEY_S) == GLFW_PRESS) {
     this->current_speed = -PLAYER_RUN_SPEED;
-  } else {
+  }
+  else {
     this->current_speed = 0;
   }
 
   if (glfwGetKey(glfwGetCurrentContext(), GLFW_KEY_D) == GLFW_PRESS) {
     this->current_turn_speed = -PLAYER_TURN_SPEED;
-  } else if (glfwGetKey(glfwGetCurrentContext(), GLFW_KEY_A) == GLFW_PRESS) {
+  }
+  else if (glfwGetKey(glfwGetCurrentContext(), GLFW_KEY_A) == GLFW_PRESS) {
     this->current_turn_speed = PLAYER_TURN_SPEED;
-  } else {
+  }
+  else {
     this->current_turn_speed = 0;
   }
 

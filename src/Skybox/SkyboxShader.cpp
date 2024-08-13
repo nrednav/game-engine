@@ -2,12 +2,16 @@
 
 #include "SkyboxShader.h"
 #include "Constants.h"
-#include "Display/DisplayManager.h"
 #include "Utils/Math.h"
 #include "glm/gtx/transform.hpp"
 
-SkyboxShader::SkyboxShader(std::string vertex_file, std::string fragment_file)
+SkyboxShader::SkyboxShader(
+  std::string vertex_file,
+  std::string fragment_file,
+  Display* display
+)
     : ShaderProgram(vertex_file, fragment_file) {
+  this->display = display;
   this->bind_attributes();
   this->get_all_uniform_locations();
 }
@@ -37,8 +41,7 @@ void SkyboxShader::load_view_matrix(Camera* camera) {
   view_matrix[3][2] = 0;
 
   this->current_rotation +=
-    SKYBOX_ROTATION_SPEED *
-    (float)DisplayManager::get_instance()->get_frame_time_seconds();
+    SKYBOX_ROTATION_SPEED * this->display->get_frame_time_seconds();
 
   view_matrix = glm::rotate(
     view_matrix,

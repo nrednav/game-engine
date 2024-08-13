@@ -13,12 +13,15 @@ public:
   SkyboxRenderer(
     SkyboxShader* shader,
     Loader* loader,
-    glm::mat4 projection_matrix
+    glm::mat4 projection_matrix,
+    Display* display
   );
 
   void render(Camera* camera, glm::vec3 color);
 
 private:
+  Display* display;
+
   float SIZE = SKYBOX_SIZE;
 
   std::vector<float> vertices = {

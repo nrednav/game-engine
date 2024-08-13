@@ -12,7 +12,7 @@ public:
     glm::vec3 rotation,
     glm::vec3 scale
   );
-  void move(Terrain* terrain);
+  void move(Terrain* terrain, double frame_time_seconds);
   void jump();
 
 private:

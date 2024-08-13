@@ -1,14 +1,15 @@
 #include "GL/glew.h"
 #include "SkyboxRenderer.h"
-#include "Display/DisplayManager.h"
 
 #include "glm/gtc/constants.hpp"
 
 SkyboxRenderer::SkyboxRenderer(
   SkyboxShader* shader,
   Loader* loader,
-  glm::mat4 projection_matrix
+  glm::mat4 projection_matrix,
+  Display* display
 ) {
+  this->display = display;
   this->cube = loader->load_to_vao(this->vertices, 3);
   this->day_texture_id = loader->load_cube_map(this->day_texture_filepaths);
   this->night_texture_id = loader->load_cube_map(this->night_texture_filepaths);
@@ -47,7 +48,7 @@ void SkyboxRenderer::bind_textures() {
 }
 
 float SkyboxRenderer::get_blend_factor() {
-  this->time += (float)DisplayManager::get_instance()->get_frame_time_seconds();
+  this->time += this->display->get_frame_time_seconds();
   float delta = -1 * this->time * 2 * glm::pi<float>() / SKYBOX_CYCLE_LENGTH;
 
   return (float)glm::abs(0.5f * glm::cos(glm::radians(delta)) - 0.5f);

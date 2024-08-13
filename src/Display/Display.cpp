@@ -1,21 +1,14 @@
 #include "GL/glew.h"
-#include "DisplayManager.h"
+#include "Display.h"
 #include "Constants.h"
 
+#include <GLFW/glfw3.h>
 #include <iostream>
 #include <stdexcept>
 
-DisplayManager* DisplayManager::instance = nullptr;
-
-DisplayManager* DisplayManager::get_instance() {
-  return instance = (instance != nullptr) ? instance : new DisplayManager();
-}
-
-void DisplayManager::create_display() {
+Display::Display() {
   if (!glfwInit()) {
-    throw std::runtime_error{
-      "DisplayManager/create_display: Failed to initialize GLFW"
-    };
+    throw std::runtime_error{"Display/constructor: Failed to initialize GLFW"};
   }
 
   std::cout << "GLFW initialized." << std::endl;
@@ -24,39 +17,41 @@ void DisplayManager::create_display() {
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-  this->display =
+  this->window =
     glfwCreateWindow(DISPLAY_WIDTH, DISPLAY_HEIGHT, "Game Engine", NULL, NULL);
 
-  if (!this->display) {
+  if (!this->window) {
     glfwTerminate();
 
     throw std::runtime_error{
-      "DisplayManager/create_display: Failed to create window with GLFW"
+      "Display/constructor: Failed to create window with GLFW"
     };
   }
 
-  std::cout << "Display created." << std::endl;
+  std::cout << "Window created." << std::endl;
 
-  glfwMakeContextCurrent(this->display);
-  this->center_window(display, glfwGetPrimaryMonitor());
-  glfwSetKeyCallback(this->display, key_pressed);
+  glfwMakeContextCurrent(this->window);
+  this->center_window(this->window, glfwGetPrimaryMonitor());
+  glfwSetKeyCallback(this->window, key_pressed);
 
   glViewport(0, 0, DISPLAY_WIDTH, DISPLAY_HEIGHT);
   glfwSwapInterval(1);
-  glfwSetInputMode(this->display, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+  glfwSetInputMode(this->window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
   this->last_frame_time = glfwGetTime();
 
   if (glewInit() != GLEW_OK) {
-    throw std::runtime_error{
-      "DisplayManager/create_display: Failed to initialize GLEW"
-    };
+    throw std::runtime_error{"Display/constructor: Failed to initialize GLEW"};
   }
 
   std::cout << "GLEW initialized." << std::endl;
 }
 
-void DisplayManager::update_display() {
-  glfwSwapBuffers(display);
+Display::~Display() {
+  glfwTerminate();
+}
+
+void Display::update() {
+  glfwSwapBuffers(this->window);
   glfwPollEvents();
 
   double current_frame_time = glfwGetTime();
@@ -65,11 +60,7 @@ void DisplayManager::update_display() {
   this->last_frame_time = current_frame_time;
 }
 
-void DisplayManager::close_display() {
-  glfwTerminate();
-}
-
-void DisplayManager::center_window(GLFWwindow* window, GLFWmonitor* monitor) {
+void Display::center_window(GLFWwindow* window, GLFWmonitor* monitor) {
   if (!monitor) {
     return;
   }
@@ -97,8 +88,7 @@ void DisplayManager::center_window(GLFWwindow* window, GLFWmonitor* monitor) {
   );
 }
 
-// Callbacks
-void DisplayManager::key_pressed(
+void Display::key_pressed(
   GLFWwindow* window,
   int key,
   int scancode,

@@ -1,6 +1,7 @@
 #ifndef MASTERRENDERER_H
 #define MASTERRENDERER_H
 
+#include "Display/Display.h"
 #include "EntityRenderer.h"
 #include "Shader/StaticShader.h"
 #include "Skybox/SkyboxRenderer.h"
@@ -17,7 +18,7 @@
 
 class MasterRenderer {
 public:
-  MasterRenderer(Loader* loader);
+  MasterRenderer(Display* display, Loader* loader);
   ~MasterRenderer();
 
   void render(std::vector<Light*> lights, Camera* camera);

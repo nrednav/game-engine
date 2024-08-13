@@ -5,7 +5,7 @@
 #include "Floor/Floor.h"
 #include <memory>
 
-MasterRenderer::MasterRenderer(Loader* loader) {
+MasterRenderer::MasterRenderer(Display* display, Loader* loader) {
   this->enable_culling();
 
   this->entity_shader = std::make_unique<StaticShader>(
@@ -32,13 +32,15 @@ MasterRenderer::MasterRenderer(Loader* loader) {
 
   this->skybox_shader = std::make_unique<SkyboxShader>(
     "src/Skybox/SkyboxVertexShader.txt",
-    "src/Skybox/SkyboxFragmentShader.txt"
+    "src/Skybox/SkyboxFragmentShader.txt",
+    display
   );
 
   this->skybox_renderer = std::make_unique<SkyboxRenderer>(
     this->skybox_shader.get(),
     loader,
-    this->projection_matrix
+    this->projection_matrix,
+    display
   );
 }
 
