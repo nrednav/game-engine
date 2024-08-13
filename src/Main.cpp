@@ -1,77 +1,70 @@
-#include "Display/DisplayManager.h"
+#include <cstdlib>
+#include <memory>
+#include <iostream>
+#include "Display/Display.h"
 #include "Loader/Loader.h"
 #include "Renderer/MasterRenderer.h"
 #include "Entity/EntityManager.h"
 #include "Constants.h"
-#include <vector>
-#include <iostream>
+#include "Floor/Floor.h"
 
 int main() {
-  if (!DisplayManager::getInstance()->createDisplay()) {
-    std::cout << "Failed to create window..." << std::endl;
-    return -1;
-  }
+  try {
+    auto display = std::make_unique<Display>();
+    auto loader = std::make_unique<Loader>();
+    auto renderer =
+      std::make_unique<MasterRenderer>(display.get(), loader.get());
 
-  GLFWwindow* display = DisplayManager::getInstance()->getDisplay();
-  Loader* loader = new Loader();
-  MasterRenderer* renderer = new MasterRenderer(loader);
+    auto floor = std::make_unique<Floor>(
+      FloorDimensions{.length = 2, .width = 2},
+      loader.get()
+    );
 
-  TerrainTexture* bgTexture =
-      new TerrainTexture(loader->loadTexture("grassTerrain2", true));
-  TerrainTexture* rTexture =
-      new TerrainTexture(loader->loadTexture("mudTerrain", true));
-  TerrainTexture* gTexture =
-      new TerrainTexture(loader->loadTexture("grassFlowersTerrain", true));
-  TerrainTexture* bTexture =
-      new TerrainTexture(loader->loadTexture("pathTerrain", true));
-  TerrainTexture* blendMap =
-      new TerrainTexture(loader->loadTexture("blendMap", true));
+    auto entity_manager = std::make_unique<EntityManager>(
+      loader.get(),
+      floor->get_terrain_at(0, 0)
+    );
 
-  TerrainTexturePack* texturePack =
-      new TerrainTexturePack(bgTexture, rTexture, gTexture, bTexture);
+    entity_manager->generate_entities(ENTITY_COUNT);
 
-  std::vector<std::vector<Terrain*>> terrains(2, std::vector<Terrain*>(2));
-  terrains[0][0] =
-      new Terrain(0, 0, loader, texturePack, blendMap, "heightmap");
-  terrains[0][1] =
-      new Terrain(0, 1, loader, texturePack, blendMap, "heightmap");
-  terrains[1][0] =
-      new Terrain(1, 0, loader, texturePack, blendMap, "heightmap");
-  terrains[1][1] =
-      new Terrain(1, 1, loader, texturePack, blendMap, "heightmap");
+    auto player = entity_manager->create_player("player", 1.0f);
+    auto camera = std::make_unique<Camera>(player.get(), glm::vec3(0, 5, 0));
 
-  EntityManager* entityManager = EntityManager::getInstance();
-  entityManager->initialize(loader, terrains[0][0]);
-  entityManager->generateEntities(ENTITY_COUNT);
+    int previous_grid_x = 0;
+    int previous_grid_z = 0;
 
-  Player* player = entityManager->createPlayer("player", 1.0f);
-  Camera* camera = new Camera(player, glm::vec3(0, 5, 0));
+    while (!glfwWindowShouldClose(display->get_window())) {
+      int current_grid_x = (int)(player->get_position().x / TERRAIN_SIZE + 1);
+      int current_grid_z = (int)(player->get_position().z / TERRAIN_SIZE + 1);
 
-  int previousGridX = 0, previousGridZ = 0;
+      auto current_terrain =
+        floor->get_terrain_at(current_grid_x, current_grid_z);
 
-  while (!glfwWindowShouldClose(display)) {
-    int gridX = (int)(player->getPosition().x / TERRAIN_SIZE + 1);
-    int gridZ = (int)(player->getPosition().z / TERRAIN_SIZE + 1);
+      if (current_grid_x != previous_grid_x || current_grid_z != previous_grid_z) {
+        previous_grid_x = current_grid_x;
+        previous_grid_z = current_grid_z;
+        entity_manager->recalculate_entity_positions(current_terrain);
+      }
 
-    if (gridX != previousGridX || gridZ != previousGridZ) {
-      previousGridX = gridX;
-      previousGridZ = gridZ;
-      entityManager->recalculateEntityPositions(terrains[gridX][gridZ]);
+      player->move(current_terrain, display->get_frame_time_seconds());
+      camera->move();
+
+      renderer->render_scene(
+        entity_manager->get_entities(),
+        floor->get_terrain_grid(),
+        entity_manager->get_lights(),
+        player.get(),
+        camera.get()
+      );
+
+      display->update();
     }
+  }
+  catch (const std::exception& exception) {
+    std::cerr << exception.what() << std::endl;
 
-    player->move(terrains[gridX][gridZ]);
-    camera->move();
-
-    renderer->renderScene(entityManager->getEntities(), terrains,
-                          entityManager->getLights(), player, camera);
-
-    DisplayManager::getInstance()->updateDisplay();
+    return EXIT_FAILURE;
   }
 
-  entityManager->cleanup();
-  renderer->cleanup();
-  loader->cleanup();
-  DisplayManager::getInstance()->closeDisplay();
-
-  return 0;
+  return EXIT_SUCCESS;
 }

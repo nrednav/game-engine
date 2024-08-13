@@ -2,57 +2,65 @@
 
 #include "SkyboxShader.h"
 #include "Constants.h"
-#include "Display/DisplayManager.h"
 #include "Utils/Math.h"
 #include "glm/gtx/transform.hpp"
 
-SkyboxShader::SkyboxShader(std::string vertexFile, std::string fragmentFile)
-    : ShaderProgram(vertexFile, fragmentFile) {
-  this->bindAttributes();
-  this->getAllUniformLocations();
+SkyboxShader::SkyboxShader(
+  std::string vertex_file,
+  std::string fragment_file,
+  Display* display
+)
+    : ShaderProgram(vertex_file, fragment_file) {
+  this->display = display;
+  this->bind_attributes();
+  this->get_all_uniform_locations();
 }
 
-void SkyboxShader::bindAttributes() { bindAttribute(0, "position"); }
-
-void SkyboxShader::getAllUniformLocations() {
-  this->location_projectionMatrix = getUniformLocation("projectionMatrix");
-  this->location_viewMatrix = getUniformLocation("viewMatrix");
-  this->location_fogColor = getUniformLocation("fogColor");
-  this->location_cubeMapDay = getUniformLocation("cubeMapDay");
-  this->location_cubeMapNight = getUniformLocation("cubeMapNight");
-  this->location_blendFactor = getUniformLocation("blendFactor");
+void SkyboxShader::bind_attributes() {
+  bind_attribute(0, "position");
 }
 
-void SkyboxShader::loadProjectionMatrix(glm::mat4 matrix) {
-  loadMatrix(this->location_projectionMatrix, matrix);
+void SkyboxShader::get_all_uniform_locations() {
+  this->location_projection_matrix = get_uniform_location("projection_matrix");
+  this->location_view_matrix = get_uniform_location("view_matrix");
+  this->location_fog_color = get_uniform_location("fog_color");
+  this->location_day_cube_map = get_uniform_location("day_cube_map");
+  this->location_night_cube_map = get_uniform_location("night_cube_map");
+  this->location_blend_factor = get_uniform_location("blend_factor");
 }
 
-void SkyboxShader::loadViewMatrix(Camera* camera) {
-  glm::mat4 viewMatrix = Math::createViewMatrix(camera);
-
-  viewMatrix[3][0] = 0;
-  viewMatrix[3][1] = 0;
-  viewMatrix[3][2] = 0;
-
-  this->currentRotation +=
-      SKYBOX_ROTATION_SPEED *
-      (float)DisplayManager::getInstance()->getFrameTimeSeconds();
-
-  viewMatrix = glm::rotate(viewMatrix, glm::radians(this->currentRotation),
-                           glm::vec3(0, 1, 0));
-
-  loadMatrix(this->location_viewMatrix, viewMatrix);
+void SkyboxShader::load_projection_matrix(glm::mat4 matrix) {
+  load_matrix(this->location_projection_matrix, matrix);
 }
 
-void SkyboxShader::loadFogColor(glm::vec3 color) {
-  loadVector(this->location_fogColor, color);
+void SkyboxShader::load_view_matrix(Camera* camera) {
+  glm::mat4 view_matrix = Math::create_view_matrix(camera);
+
+  view_matrix[3][0] = 0;
+  view_matrix[3][1] = 0;
+  view_matrix[3][2] = 0;
+
+  this->current_rotation +=
+    SKYBOX_ROTATION_SPEED * this->display->get_frame_time_seconds();
+
+  view_matrix = glm::rotate(
+    view_matrix,
+    glm::radians(this->current_rotation),
+    glm::vec3(0, 1, 0)
+  );
+
+  load_matrix(this->location_view_matrix, view_matrix);
 }
 
-void SkyboxShader::loadBlendFactor(float value) {
-  loadFloat(this->location_blendFactor, value);
+void SkyboxShader::load_fog_color(glm::vec3 color) {
+  load_vector(this->location_fog_color, color);
 }
 
-void SkyboxShader::connectTextureUnits() {
-  loadInt(this->location_cubeMapDay, 0);
-  loadInt(this->location_cubeMapNight, 1);
+void SkyboxShader::load_blend_factor(float value) {
+  load_float(this->location_blend_factor, value);
+}
+
+void SkyboxShader::connect_texture_units() {
+  load_int(this->location_day_cube_map, 0);
+  load_int(this->location_night_cube_map, 1);
 }

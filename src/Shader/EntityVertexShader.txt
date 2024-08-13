@@ -1,0 +1,53 @@
+#version 400 core
+
+const int MAX_LIGHT_COUNT = 4;
+
+in vec3 position;
+in vec2 texture_coords;
+in vec3 normal;
+
+out vec2 pass_texture_coords;
+out vec3 surface_normal;
+out vec3 to_light_vector[MAX_LIGHT_COUNT];
+out vec3 to_camera_vector;
+out float visibility;
+
+uniform mat4 transformation_matrix;
+uniform mat4 projection_matrix;
+uniform mat4 view_matrix;
+uniform vec3 light_position[MAX_LIGHT_COUNT];
+
+uniform float use_fake_lighting;
+
+uniform float texture_row_count;
+uniform vec2 texture_offset;
+
+const float fog_density = 0.0035;
+const float fog_gradient = 5.0;
+
+void main(void) {
+	vec4 world_position = transformation_matrix * vec4(position, 1.0);
+	vec4 position_relative_to_camera = view_matrix * world_position;
+
+	gl_Position = projection_matrix * position_relative_to_camera;
+	pass_texture_coords = (texture_coords / texture_row_count) + texture_offset;
+
+	vec3 actual_normal = normal;
+
+	if (use_fake_lighting > 0.5) {
+		actual_normal = vec3(0.0, 1.0, 0.0);
+	}
+
+	surface_normal = (transformation_matrix * vec4(actual_normal, 0.0)).xyz;
+
+	for(int i = 0; i < MAX_LIGHT_COUNT; i++) {
+		to_light_vector[i] = light_position[i] - world_position.xyz;
+	}
+
+	to_camera_vector = (inverse(view_matrix) * vec4(0.0, 0.0, 0.0, 1.0)).xyz - world_position.xyz;
+
+	float distance = length(position_relative_to_camera.xyz);
+	visibility = exp(-pow((distance * fog_density), fog_gradient));
+	visibility = clamp(visibility, 0.0, 1.0);
+}
+

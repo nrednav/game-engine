@@ -1,7 +1,9 @@
 #ifndef MASTERRENDERER_H
 #define MASTERRENDERER_H
 
+#include "Display/Display.h"
 #include "EntityRenderer.h"
+#include "Floor/Floor.h"
 #include "Shader/StaticShader.h"
 #include "Skybox/SkyboxRenderer.h"
 #include "TerrainRenderer.h"
@@ -12,41 +14,49 @@
 #include "Model/TexturedModel.h"
 
 #include <map>
+#include <memory>
 #include <vector>
 
 class MasterRenderer {
 public:
-  MasterRenderer(Loader* loader);
-  void render(std::vector<Light*> lights, Camera* camera);
-  void renderScene(const std::vector<Entity*>& entities,
-                   std::vector<std::vector<Terrain*>>& terrains,
-                   const std::vector<Light*>& lights, Player* player,
-                   Camera* camera);
-  void prepare();
-  void processEntity(Entity* entity);
-  void processTerrain(Terrain* terrain);
-  void createProjectionMatrix();
-  void cleanup();
+  MasterRenderer(Display* display, Loader* loader);
+  ~MasterRenderer();
 
-  static void enableCulling();
-  static void disableCulling();
+  void
+  render(const std::vector<std::unique_ptr<Light>>& lights, Camera* camera);
+
+  void render_scene(
+    const std::vector<std::unique_ptr<Entity>>& entities,
+    TerrainGrid& terrain_grid,
+    const std::vector<std::unique_ptr<Light>>& lights,
+    Player* player,
+    Camera* camera
+  );
+
+  void prepare();
+  void process_entity(Entity* entity);
+  void process_terrain(Terrain* terrain);
+  void create_projection_matrix();
+
+  static void enable_culling();
+  static void disable_culling();
 
 private:
-  StaticShader* entityShader;
-  EntityRenderer* entityRenderer;
+  std::unique_ptr<StaticShader> entity_shader;
+  std::unique_ptr<EntityRenderer> entity_renderer;
 
-  TerrainShader* terrainShader;
-  TerrainRenderer* terrainRenderer;
+  std::unique_ptr<TerrainShader> terrain_shader;
+  std::unique_ptr<TerrainRenderer> terrain_renderer;
 
-  SkyboxShader* skyboxShader;
-  SkyboxRenderer* skyboxRenderer;
+  std::unique_ptr<SkyboxShader> skybox_shader;
+  std::unique_ptr<SkyboxRenderer> skybox_renderer;
 
-  glm::mat4 projectionMatrix;
+  glm::mat4 projection_matrix;
   std::map<TexturedModel*, std::vector<Entity*>> entities;
   std::vector<Terrain*> terrains;
 
-  int previousTerrainGridX = 0;
-  int previousTerrainGridZ = 0;
+  int previous_terrain_grid_x = 0;
+  int previous_terrain_grid_z = 0;
 };
 
 #endif // !MASTERRENDERER_H

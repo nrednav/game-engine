@@ -6,103 +6,183 @@
 
 #include <iostream>
 
-RawModel* Loader::loadToVAO(std::vector<float>& positions,
-                            std::vector<int>& indices,
-                            std::vector<float>& textureCoords,
-                            std::vector<float>& normals) {
-  unsigned int vaoID = createVAO();
-  bindIndicesBuffer(indices);
-  storeDataInAttributeList(0, 3, positions);
-  storeDataInAttributeList(1, 2, textureCoords);
-  storeDataInAttributeList(2, 3, normals);
-  unbindVAO();
-  return new RawModel(vaoID, (unsigned int)indices.size());
+Loader::Loader() {}
+
+Loader::~Loader() {
+  for (unsigned int vao_id : vao_list) {
+    glDeleteVertexArrays(1, &vao_id);
+  }
+
+  for (unsigned int vbo_id : vbo_list) {
+    glDeleteBuffers(1, &vbo_id);
+  }
+
+  for (unsigned int texture_id : textures) {
+    glDeleteTextures(1, &texture_id);
+  }
 }
 
-RawModel* Loader::loadToVAO(std::vector<float>& positions, int dimensions) {
-  int vaoID = createVAO();
-  storeDataInAttributeList(0, dimensions, positions);
-  unbindVAO();
-  return new RawModel(vaoID, ((unsigned int)positions.size()) / dimensions);
+std::unique_ptr<RawModel> Loader::load_to_vao(
+  std::vector<float>& positions,
+  std::vector<int>& indices,
+  std::vector<float>& texture_coords,
+  std::vector<float>& normals
+) {
+  unsigned int vao_id = create_vao();
+
+  bind_indices_buffer(indices);
+  store_data_in_attribute_list(0, 3, positions);
+  store_data_in_attribute_list(1, 2, texture_coords);
+  store_data_in_attribute_list(2, 3, normals);
+
+  unbind_vao();
+
+  return std::make_unique<RawModel>(vao_id, (unsigned int)indices.size());
 }
 
-unsigned int Loader::createVAO() {
-  unsigned int vaoID;
-  glGenVertexArrays(1, &vaoID);
-  vaoList.push_back(vaoID);
-  glBindVertexArray(vaoID);
-  return vaoID;
+std::unique_ptr<RawModel>
+Loader::load_to_vao(std::vector<float>& positions, int dimensions) {
+  int vao_id = create_vao();
+
+  store_data_in_attribute_list(0, dimensions, positions);
+  unbind_vao();
+
+  return std::make_unique<RawModel>(
+    vao_id,
+    ((unsigned int)positions.size()) / dimensions
+  );
 }
 
-void Loader::storeDataInAttributeList(int attributeNumber, int componentCount,
-                                      std::vector<float>& data) {
-  unsigned int vboID;
-  glGenBuffers(1, &vboID);
-  vboList.push_back(vboID);
-  glBindBuffer(GL_ARRAY_BUFFER, vboID);
-  glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(float), &data[0],
-               GL_STATIC_DRAW);
-  glVertexAttribPointer(attributeNumber, componentCount, GL_FLOAT, false, 0, 0);
+unsigned int Loader::create_vao() {
+  unsigned int vao_id;
+
+  glGenVertexArrays(1, &vao_id);
+
+  vao_list.push_back(vao_id);
+
+  glBindVertexArray(vao_id);
+
+  return vao_id;
+}
+
+void Loader::store_data_in_attribute_list(
+  int attribute_number,
+  int component_count,
+  std::vector<float>& data
+) {
+  unsigned int vbo_id;
+
+  glGenBuffers(1, &vbo_id);
+
+  vbo_list.push_back(vbo_id);
+
+  glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
+  glBufferData(
+    GL_ARRAY_BUFFER,
+    data.size() * sizeof(float),
+    &data[0],
+    GL_STATIC_DRAW
+  );
+  glVertexAttribPointer(
+    attribute_number,
+    component_count,
+    GL_FLOAT,
+    false,
+    0,
+    0
+  );
   glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void Loader::bindIndicesBuffer(std::vector<int>& indices) {
-  unsigned int vboID;
-  glGenBuffers(1, &vboID);
-  vboList.push_back(vboID);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboID);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(int),
-               &indices[0], GL_STATIC_DRAW);
+void Loader::bind_indices_buffer(std::vector<int>& indices) {
+  unsigned int vbo_id;
+
+  glGenBuffers(1, &vbo_id);
+
+  vbo_list.push_back(vbo_id);
+
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo_id);
+  glBufferData(
+    GL_ELEMENT_ARRAY_BUFFER,
+    indices.size() * sizeof(int),
+    &indices[0],
+    GL_STATIC_DRAW
+  );
 }
 
-int Loader::loadTexture(std::string fileName, bool repeat) {
-  unsigned int textureID;
-  int width, height, componentCount;
-  std::string filePath = "assets/textures/" + fileName + ".png";
-  stbi_uc* imageData =
-      stbi_load(filePath.c_str(), &width, &height, &componentCount, 4);
+int Loader::load_texture(std::string filepath, bool repeating) {
+  unsigned int texture_id;
+  int width, height, component_count;
+  stbi_uc* image_data =
+    stbi_load(filepath.c_str(), &width, &height, &component_count, 4);
 
-  if (imageData == nullptr) {
-    std::cout << "Failed to load texture: " << fileName << std::endl;
+  if (image_data == nullptr) {
+    std::cout << "Failed to load texture at file path: " << filepath
+              << std::endl;
   }
 
-  glGenTextures(1, &textureID);
-  textures.push_back(textureID);
+  glGenTextures(1, &texture_id);
+  textures.push_back(texture_id);
 
-  glBindTexture(GL_TEXTURE_2D, textureID);
+  glBindTexture(GL_TEXTURE_2D, texture_id);
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-  if (!repeat) {
+  if (!repeating) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
   }
 
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA,
-               GL_UNSIGNED_BYTE, imageData);
+  glTexImage2D(
+    GL_TEXTURE_2D,
+    0,
+    GL_RGBA,
+    width,
+    height,
+    0,
+    GL_RGBA,
+    GL_UNSIGNED_BYTE,
+    image_data
+  );
   glGenerateMipmap(GL_TEXTURE_2D);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-                  GL_LINEAR_MIPMAP_LINEAR);
+  glTexParameteri(
+    GL_TEXTURE_2D,
+    GL_TEXTURE_MIN_FILTER,
+    GL_LINEAR_MIPMAP_LINEAR
+  );
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, -0.5f);
 
   glBindTexture(GL_TEXTURE_2D, 0);
-  stbi_image_free(imageData);
+  stbi_image_free(image_data);
 
-  return textureID;
+  return texture_id;
 }
 
-int Loader::loadCubeMap(std::vector<std::string>& textureFiles) {
-  unsigned int textureID;
-  glGenTextures(1, &textureID);
-  glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
+int Loader::load_cube_map(std::vector<std::string>& texture_filepaths) {
+  unsigned int texture_id;
 
-  for (int i = 0; i < textureFiles.size(); i++) {
-    TextureData* data = this->decodeTextureFile(textureFiles[i]);
-    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA,
-                 data->getWidth(), data->getHeight(), 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, data->getBuffer());
-    stbi_image_free(data->getBuffer());
+  glGenTextures(1, &texture_id);
+
+  glActiveTexture(GL_TEXTURE0);
+
+  glBindTexture(GL_TEXTURE_CUBE_MAP, texture_id);
+
+  for (int i = 0; i < texture_filepaths.size(); i++) {
+    TextureData* data = this->decode_texture_file(texture_filepaths[i]);
+
+    glTexImage2D(
+      GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
+      0,
+      GL_RGBA,
+      data->get_width(),
+      data->get_height(),
+      0,
+      GL_RGBA,
+      GL_UNSIGNED_BYTE,
+      data->get_buffer()
+    );
+
+    stbi_image_free(data->get_buffer());
   }
 
   glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -111,31 +191,27 @@ int Loader::loadCubeMap(std::vector<std::string>& textureFiles) {
   glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
-  this->textures.push_back(textureID);
+  this->textures.push_back(texture_id);
 
   glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
-  return textureID;
+  return texture_id;
 }
 
-TextureData* Loader::decodeTextureFile(std::string fileName) {
-  int width, height, nComponents;
-  std::string filePath = "assets/textures/" + fileName + ".png";
-  stbi_uc* imageData = stbi_load(filePath.c_str(), &width, &height,
-                                 &nComponents, STBI_rgb_alpha);
+TextureData* Loader::decode_texture_file(std::string filepath) {
+  int width, height, component_count;
 
-  return new TextureData(imageData, width, height);
+  stbi_uc* image_data = stbi_load(
+    filepath.c_str(),
+    &width,
+    &height,
+    &component_count,
+    STBI_rgb_alpha
+  );
+
+  return new TextureData(image_data, width, height);
 }
 
-void Loader::unbindVAO() { glBindVertexArray(0); }
-
-void Loader::cleanup() {
-  for (unsigned int vaoID : vaoList)
-    glDeleteVertexArrays(1, &vaoID);
-
-  for (unsigned int vboID : vboList)
-    glDeleteBuffers(1, &vboID);
-
-  for (unsigned int textureID : textures)
-    glDeleteTextures(1, &textureID);
+void Loader::unbind_vao() {
+  glBindVertexArray(0);
 }

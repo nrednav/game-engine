@@ -3,13 +3,13 @@
 
 class RawModel {
 public:
-  RawModel(unsigned int vaoID, unsigned int vertexCount);
-  unsigned int getVaoID() const { return this->vaoID; }
-  unsigned int getVertexCount() const { return this->vertexCount; }
+  RawModel(unsigned int vao_id, unsigned int vertex_count);
+  unsigned int get_vao_id() const { return this->vao_id; }
+  unsigned int get_vertex_count() const { return this->vertex_count; }
 
 private:
-  unsigned int vaoID;
-  unsigned int vertexCount;
+  unsigned int vao_id;
+  unsigned int vertex_count;
 };
 
 #endif // !RAWMODEL_H

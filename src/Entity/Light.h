@@ -11,13 +11,13 @@ public:
   Light(glm::vec3 position, glm::vec3 color, glm::vec3 attenuation)
       : position(position), color(color), attenuation(attenuation) {}
 
-  glm::vec3 getPosition() const { return this->position; }
-  glm::vec3 getColor() const { return this->color; }
-  glm::vec3 getAttenuation() const { return this->attenuation; }
+  glm::vec3 get_position() const { return this->position; }
+  glm::vec3 get_color() const { return this->color; }
+  glm::vec3 get_attenuation() const { return this->attenuation; }
 
-  void setPosition(glm::vec3 position) { this->position = position; }
-  void setColor(glm::vec3 color) { this->color = color; }
-  void setAttenuation(glm::vec3 attenuation) {
+  void set_position(glm::vec3 position) { this->position = position; }
+  void set_color(glm::vec3 color) { this->color = color; }
+  void set_attenuation(glm::vec3 attenuation) {
     this->attenuation = attenuation;
   }
 

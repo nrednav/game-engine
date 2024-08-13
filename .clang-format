@@ -1,6 +1,37 @@
-BasedOnStyle: LLVM
-
+Language: Cpp
+IndentWidth: 2
 UseTab: Never
+ColumnLimit: 80
+ObjCBlockIndentWidth: 2
+ContinuationIndentWidth: 2
 PointerAlignment: Left
 ReferenceAlignment: Left
+AlignAfterOpenBracket: BlockIndent
+IndentCaseLabels: true
 SortIncludes: false
+BinPackArguments: false
+BinPackParameters: false
+AllowAllParametersOfDeclarationOnNextLine: false
+AllowAllArgumentsOnNextLine: false
+AllowShortFunctionsOnASingleLine: Inline
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLambdasOnASingleLine: Inline
+AllowShortLoopsOnASingleLine: false
+AllowShortBlocksOnASingleLine: Empty
+BraceWrapping:
+  AfterCaseLabel: false
+  AfterClass: false
+  AfterEnum: false
+  AfterFunction: false
+  AfterNamespace: false
+  AfterStruct: false
+  AfterUnion: false
+  AfterExternBlock: false
+  BeforeCatch: true
+  BeforeElse: true
+  BeforeLambdaBody: false
+  BeforeWhile: true
+  IndentBraces: false
+  SplitEmptyFunction: false
+  SplitEmptyNamespace: false
+BreakBeforeBraces: Custom

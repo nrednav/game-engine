@@ -2,16 +2,17 @@
 #include <cstring>
 #include <stdio.h>
 
-RawModel* ObjLoader::load_model(std::string fileName, Loader* loader) {
+std::unique_ptr<RawModel>
+ObjLoader::load_model(std::string filename, Loader* loader) {
   // Open the file as read only
-  FILE* file = fopen(("assets/models/" + fileName + ".obj").c_str(), "r");
+  FILE* file = fopen(("assets/models/" + filename + ".obj").c_str(), "r");
 
   if (!file) {
-    printf("Failed to open: %s\n", fileName.c_str());
+    printf("Failed to open: %s\n", filename.c_str());
   }
 
   // Storage variables
-  std::vector<float> vertices, texturesArray, normalsArray;
+  std::vector<float> vertices, textures_array, normals_array;
   std::vector<glm::vec2> textures;
   std::vector<glm::vec3> normals;
   std::vector<int> indices;
@@ -44,7 +45,9 @@ RawModel* ObjLoader::load_model(std::string fileName, Loader* loader) {
       double y = strtod(token, &stop);
 
       textures.push_back(glm::vec2(x, y));
-    } else if (type[0] == 'v' && type[1] == 'n') {
+    }
+    // VN is vertex normals
+    else if (type[0] == 'v' && type[1] == 'n') {
       double x = strtod(token, &stop);
 
       token = stop + 1;
@@ -60,45 +63,54 @@ RawModel* ObjLoader::load_model(std::string fileName, Loader* loader) {
     // F is the index list for faces
     else if (type[0] == 'f') {
       if (indices.size() == 0) {
-        texturesArray.resize((vertices.size() / 3) * 2);
-        normalsArray.resize(vertices.size());
+        textures_array.resize((vertices.size() / 3) * 2);
+        normals_array.resize(vertices.size());
       }
 
-      process_vertices(token, indices, textures, texturesArray, normals,
-                       normalsArray);
+      process_vertices(
+        token,
+        indices,
+        textures,
+        textures_array,
+        normals,
+        normals_array
+      );
     }
   }
 
   fclose(file);
 
-  return loader->loadToVAO(vertices, indices, texturesArray, normalsArray);
+  return loader->load_to_vao(vertices, indices, textures_array, normals_array);
 }
 
-void ObjLoader::process_vertices(char* vertexData, std::vector<int>& indices,
-                                 std::vector<glm::vec2>& textures,
-                                 std::vector<float>& texturesArray,
-                                 std::vector<glm::vec3>& normals,
-                                 std::vector<float>& normalsArray) {
+void ObjLoader::process_vertices(
+  char* vertex_data,
+  std::vector<int>& indices,
+  std::vector<glm::vec2>& textures,
+  std::vector<float>& textures_array,
+  std::vector<glm::vec3>& normals,
+  std::vector<float>& normals_array
+) {
   char* stop;
-  int vertexPointer;
+  int vertex_pointer;
 
   for (unsigned int i = 0; i < 3; i++) {
     // Get and store index
-    vertexPointer = strtol(vertexData, &stop, 10) - 1;
-    indices.push_back(vertexPointer);
-    vertexData = stop + 1; // Move to the next value
+    vertex_pointer = strtol(vertex_data, &stop, 10) - 1;
+    indices.push_back(vertex_pointer);
+    vertex_data = stop + 1;
 
     // Get and store texture points
-    glm::vec2 texture = textures[strtol(vertexData, &stop, 10) - 1];
-    texturesArray[vertexPointer * 2] = texture.x;
-    texturesArray[vertexPointer * 2 + 1] = 1 - texture.y;
-    vertexData = stop + 1; // Move to the next value
+    glm::vec2 texture = textures[strtol(vertex_data, &stop, 10) - 1];
+    textures_array[vertex_pointer * 2] = texture.x;
+    textures_array[vertex_pointer * 2 + 1] = 1 - texture.y;
+    vertex_data = stop + 1;
 
     // Get and store normal points
-    glm::vec3 normal = normals[strtol(vertexData, &stop, 10) - 1];
-    normalsArray[vertexPointer * 3] = normal.x;
-    normalsArray[vertexPointer * 3 + 1] = normal.y;
-    normalsArray[vertexPointer * 3 + 2] = normal.z;
-    vertexData = stop + 1; // Move to the next value
+    glm::vec3 normal = normals[strtol(vertex_data, &stop, 10) - 1];
+    normals_array[vertex_pointer * 3] = normal.x;
+    normals_array[vertex_pointer * 3 + 1] = normal.y;
+    normals_array[vertex_pointer * 3 + 2] = normal.z;
+    vertex_data = stop + 1;
   }
 }

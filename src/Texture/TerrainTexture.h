@@ -1,14 +1,22 @@
 #ifndef TERRAINTEXTURE_H
 #define TERRAINTEXTURE_H
 
+#include "Loader/Loader.h"
+#include <string>
+
+struct TerrainTextureData {
+  std::string filepath;
+  bool repeating;
+};
+
 class TerrainTexture {
 public:
-  TerrainTexture(unsigned int textureID) : textureID(textureID) {}
+  TerrainTexture(TerrainTextureData data, Loader* loader);
 
-  unsigned int getTextureID() const { return this->textureID; }
+  unsigned int get_id() const { return this->id; }
 
 private:
-  unsigned int textureID;
+  unsigned int id;
 };
 
 #endif // !TERRAINTEXTURE_H
