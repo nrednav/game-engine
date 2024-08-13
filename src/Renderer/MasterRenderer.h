@@ -18,6 +18,8 @@
 class MasterRenderer {
 public:
   MasterRenderer(Loader* loader);
+  ~MasterRenderer();
+
   void render(std::vector<Light*> lights, Camera* camera);
   void render_scene(
     const std::vector<Entity*>& entities,
@@ -30,7 +32,6 @@ public:
   void process_entity(Entity* entity);
   void process_terrain(Terrain* terrain);
   void create_projection_matrix();
-  void cleanup();
 
   static void enable_culling();
   static void disable_culling();

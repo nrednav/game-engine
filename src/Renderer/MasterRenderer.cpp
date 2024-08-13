@@ -41,6 +41,11 @@ MasterRenderer::MasterRenderer(Loader* loader) {
   );
 }
 
+MasterRenderer::~MasterRenderer() {
+  this->entity_shader->cleanup();
+  this->terrain_shader->cleanup();
+}
+
 void MasterRenderer::prepare() {
   glEnable(GL_DEPTH_TEST);
   glClearColor(SKY_COLOR_R, SKY_COLOR_G, SKY_COLOR_B, 1);
@@ -138,9 +143,4 @@ void MasterRenderer::enable_culling() {
 
 void MasterRenderer::disable_culling() {
   glDisable(GL_CULL_FACE);
-}
-
-void MasterRenderer::cleanup() {
-  this->entity_shader->cleanup();
-  this->terrain_shader->cleanup();
 }

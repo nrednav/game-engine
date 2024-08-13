@@ -127,7 +127,6 @@ int main() {
     }
 
     entity_manager->cleanup();
-    renderer->cleanup();
     display_manager->close_display();
   }
   catch (const std::exception& exception) {
