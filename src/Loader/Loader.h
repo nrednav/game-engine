@@ -19,7 +19,7 @@ public:
     std::vector<float>& normals
   );
   RawModel* load_to_vao(std::vector<float>& positions, int dimensions);
-  int load_texture(std::string fileName, bool repeat = false);
+  int load_texture(std::string filepath, bool repeating = false);
   int load_cube_map(std::vector<std::string>& texture_files);
 
 private:

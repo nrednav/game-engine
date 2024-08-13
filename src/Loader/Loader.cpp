@@ -106,15 +106,15 @@ void Loader::bind_indices_buffer(std::vector<int>& indices) {
   );
 }
 
-int Loader::load_texture(std::string filename, bool repeat) {
+int Loader::load_texture(std::string filepath, bool repeating) {
   unsigned int texture_id;
   int width, height, component_count;
-  std::string filepath = "assets/textures/" + filename + ".png";
   stbi_uc* image_data =
     stbi_load(filepath.c_str(), &width, &height, &component_count, 4);
 
   if (image_data == nullptr) {
-    std::cout << "Failed to load texture: " << filename << std::endl;
+    std::cout << "Failed to load texture at file path: " << filepath
+              << std::endl;
   }
 
   glGenTextures(1, &texture_id);
@@ -124,7 +124,7 @@ int Loader::load_texture(std::string filename, bool repeat) {
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-  if (!repeat) {
+  if (!repeating) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
   }
@@ -154,7 +154,7 @@ int Loader::load_texture(std::string filename, bool repeat) {
   return texture_id;
 }
 
-int Loader::load_cube_map(std::vector<std::string>& texture_files) {
+int Loader::load_cube_map(std::vector<std::string>& texture_filepaths) {
   unsigned int texture_id;
 
   glGenTextures(1, &texture_id);
@@ -163,8 +163,8 @@ int Loader::load_cube_map(std::vector<std::string>& texture_files) {
 
   glBindTexture(GL_TEXTURE_CUBE_MAP, texture_id);
 
-  for (int i = 0; i < texture_files.size(); i++) {
-    TextureData* data = this->decode_texture_file(texture_files[i]);
+  for (int i = 0; i < texture_filepaths.size(); i++) {
+    TextureData* data = this->decode_texture_file(texture_filepaths[i]);
 
     glTexImage2D(
       GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
@@ -194,10 +194,9 @@ int Loader::load_cube_map(std::vector<std::string>& texture_files) {
   return texture_id;
 }
 
-TextureData* Loader::decode_texture_file(std::string filename) {
+TextureData* Loader::decode_texture_file(std::string filepath) {
   int width, height, component_count;
 
-  std::string filepath = "assets/textures/" + filename + ".png";
   stbi_uc* image_data = stbi_load(
     filepath.c_str(),
     &width,

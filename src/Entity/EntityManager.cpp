@@ -94,7 +94,8 @@ void EntityManager::create_entity(
     this->entities.push_back(
       new Entity(model, position, rotation, scale, RNG::random_int(4))
     );
-  } else {
+  }
+  else {
     this->entities.push_back(new Entity(model, position, rotation, scale));
   }
 
@@ -126,7 +127,8 @@ TexturedModel* EntityManager::create_textured_model(
 ) {
 
   RawModel* entity_raw_model = ObjLoader::load_model(name, loader);
-  ModelTexture* entity_texture = new ModelTexture(loader->load_texture(name));
+  ModelTexture* entity_texture =
+    new ModelTexture(loader->load_texture("assets/textures/" + name + ".png"));
 
   if (uses_texture_atlas) {
     entity_texture->set_row_count(atlas_row_count);

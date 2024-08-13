@@ -5,7 +5,7 @@
 #include <string>
 
 struct TerrainTextureData {
-  std::string filename;
+  std::string filepath;
   bool repeating;
 };
 

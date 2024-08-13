@@ -22,11 +22,31 @@ int main() {
     auto renderer = std::make_unique<MasterRenderer>(loader.get());
 
     std::unordered_map<std::string, TerrainTextureData> terrain_texture_map{
-      {"background", {.filename = "terrain/grass/2", .repeating = true}},
-      {"red", {.filename = "terrain/mud", .repeating = true}},
-      {"green", {.filename = "terrain/grass/flowers", .repeating = true}},
-      {"blue", {.filename = "terrain/path", .repeating = true}},
-      {"blend_map", {.filename = "blend_map", .repeating = true}}
+      {"background",
+       {
+         .filepath = "assets/textures/terrain/grass/2.png",
+         .repeating = true,
+       }},
+      {"red",
+       {
+         .filepath = "assets/textures/terrain/mud.png",
+         .repeating = true,
+       }},
+      {"green",
+       {
+         .filepath = "assets/textures/terrain/grass/flowers.png",
+         .repeating = true,
+       }},
+      {"blue",
+       {
+         .filepath = "assets/textures/terrain/path.png",
+         .repeating = true,
+       }},
+      {"blend_map",
+       {
+         .filepath = "assets/textures/blend_map.png",
+         .repeating = true,
+       }}
     };
 
     auto terrain_texture_pack =

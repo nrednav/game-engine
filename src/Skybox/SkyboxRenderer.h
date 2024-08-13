@@ -41,22 +41,22 @@ private:
     SIZE,  -SIZE, -SIZE, -SIZE, -SIZE, SIZE,  SIZE,  -SIZE, SIZE
   };
 
-  std::vector<std::string> day_texture_files = {
-    "skybox/day/right",
-    "skybox/day/left",
-    "skybox/day/top",
-    "skybox/day/bottom",
-    "skybox/day/back",
-    "skybox/day/front"
+  std::vector<std::string> day_texture_filepaths = {
+    "assets/textures/skybox/day/right.png",
+    "assets/textures/skybox/day/left.png",
+    "assets/textures/skybox/day/top.png",
+    "assets/textures/skybox/day/bottom.png",
+    "assets/textures/skybox/day/back.png",
+    "assets/textures/skybox/day/front.png"
   };
 
-  std::vector<std::string> night_texture_files = {
-    "skybox/night/right",
-    "skybox/night/left",
-    "skybox/night/top",
-    "skybox/night/bottom",
-    "skybox/night/back",
-    "skybox/night/front",
+  std::vector<std::string> night_texture_filepaths = {
+    "assets/textures/skybox/night/right.png",
+    "assets/textures/skybox/night/left.png",
+    "assets/textures/skybox/night/top.png",
+    "assets/textures/skybox/night/bottom.png",
+    "assets/textures/skybox/night/back.png",
+    "assets/textures/skybox/night/front.png",
   };
 
   int day_texture_id;
